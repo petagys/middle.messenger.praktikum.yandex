@@ -1,0 +1,38 @@
+---
+title: Sign Up
+formTitle: Sign Up
+css:
+- input.css
+- btn.css
+---
+
+{{!< auth}} <div class="block__inputs-signUp">
+    <div class="block__login">
+        {{> input name="first_name" label="Name" type="text"}}
+    </div>
+    <div class="block__login">
+        {{> input name="second_name" label="Surname" type="text"}}
+    </div>
+    <div class="block__login">
+        {{> input name="login" label="Login" type="text"}}
+    </div>
+    <div class="block__login">
+        {{> input name="email" label="E-mail" type="text"}}
+    </div>
+    <div class="block__login">
+        {{> input name="phone" label="Phone" type="text"}}
+    </div>
+    <div class="block__login">
+        {{> input name="password" label="Password" type="password"}}
+    </div>
+    <div class="block__login">
+        {{> input name="confirm_password" label="Confirm password" type="password"}}
+    </div>
+    </div>
+
+    <div>
+        {{> button text="Create profile"}}
+    </div>
+    <div class="block__link">
+        <a href="index.hbs">Enter</a>
+    </div>
