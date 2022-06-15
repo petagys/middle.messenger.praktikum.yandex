@@ -22,7 +22,7 @@ export default function registerComponent<Props extends any>(Component: BlockCon
      * внутрь блоков вручную подменяя значение
      */
     (Object.keys(hash) as any).forEach((key: keyof Props) => {
-      if (this[key]) {
+      if (this[key] && typeof this[key] === 'string') {
         hash[key] = hash[key].replace(new RegExp(`{{${key}}}`, 'i'), this[key]);
       }
     });
@@ -32,10 +32,10 @@ export default function registerComponent<Props extends any>(Component: BlockCon
     children[component.id] = component;
 
     if (ref) {
-      refs[ref] = component.getContent();
+      refs[ref] = component;
     }
 
-    const contents = fn ? fn(this): '';
+    const contents = fn ? fn(this) : '';
 
     return `<div data-id="${component.id}">${contents}</div>`;
   })

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "web messanger from course from Yandex.Practicum",
   "scripts": {
-    "watch": "parcel src/pages/index.hbs --no-cache && parcel watch ./*",
+    "watch": "parcel src/index.html --no-cache && parcel watch ./*",
     "start": "node index.js",
     "build": "parcel build src/pages/index.hbs"
   },
@@ -29,7 +29,7 @@
     "autoprefixer": "10.4.7",
     "express": "4.18.1",
     "nanoid": "4.0.0",
-    "parcel": "2.3.2",
+    "parcel": "2.4.0",
     "postcss": "8.4.14",
     "postcss-import": "14.1.0",
     "postcss-nested": "5.0.6",
