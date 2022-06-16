@@ -4,30 +4,29 @@ import '../../css/login-page.css';
 import { validateValue, Validator } from '../../helpers/validator';
 
 interface LoginPageProps {
-    onLogin: () => void
+    onLogin?: () => void
 }
 
 export class LoginPage extends Block {
-    constructor(props: LoginPageProps) {
+    constructor() {
         super({
-            ...props,
             onLogin: () => {
                 const loginInput: HTMLInputElement = this.element?.querySelector('input[name="login"]')!;
                 const passwordInput: HTMLInputElement = this.element?.querySelector('input[name="password"]')!;
                 const result: { [key: string | Validator]: string } = Object.assign({ [loginInput.name]: loginInput.value },
                     { [passwordInput.name]: passwordInput.value });
-                
+
                 const loginValidate: string = validateValue(loginInput.name, loginInput.value);
                 const passwordValidate: string = validateValue(passwordInput.name, passwordInput.value);
-                
+
                 if (loginValidate !== '') {
                     this.refs.login.refs.error.setProps({ error: loginValidate })
-                } 
+                }
                 if (passwordValidate !== '') {
                     this.refs.password.refs.error.setProps({ error: passwordValidate });
                 }
-                    console.log(result)
-                
+                console.log(result)
+
             }
         })
     }
@@ -56,6 +55,9 @@ export class LoginPage extends Block {
                 </div>
                 <div>
                     {{{Button text="Enter" onClick=onLogin}}}
+                </div>
+                <div class="block__link">
+                    <a href="${document.location.origin}/registration">Create account</a>
                 </div>
                 </div>
             </div>

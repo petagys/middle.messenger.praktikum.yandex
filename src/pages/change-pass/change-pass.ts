@@ -1,14 +1,15 @@
 import Block from '../../core/Block';
 import paData from '../../data/paData.json';
+import arrowBack from '../../images/arrow_left.svg';
 
 import '../../css/pa.css';
 
 interface ChangePassProps {
-    onClick: () => void
+    onClick?: () => void
 }
 
 export class ChangePass extends Block {
-    constructor(props: ChangePassProps) {
+    constructor() {
         super({
             onClick: () => {
                 const inputs: NodeListOf<HTMLInputElement> = this.element?.querySelectorAll('input[type="password"]')!;
@@ -40,8 +41,8 @@ export class ChangePass extends Block {
                 </div> 
             </div>
             <div class="return">
-                <a href="chat.hbs">
-                    <img class="icon" src="../images/arrow_left.svg" />
+                <a href="${document.location.origin}/chats">
+                    <img class="icon" src="${arrowBack}" />
                 </a>
             </div>
         </div>

@@ -24,17 +24,37 @@ const components: BlockConstructable[] = [
     ChatElement,
     ProfileElement
 ];
-console.log(components)
+
 components.forEach((Component) => registerComponent(Component));
 
-// const currentLocation: string = document.location.pathname;
+const currentLocation: string = document.location.pathname;
 
 document.addEventListener("DOMContentLoaded", () => {
-    // let app = {};
+    let app = {} as Block;
 
-    // switch(currentLocation) {
-    //     case: 
-    // }
+    switch (currentLocation) {
+        case '/login':
+            app = new LoginPage();
+            break;
+        case '/registration':
+            app = new RegPage();
+            break;
+        case '/chats':
+            app = new ChatPage();
+            break;
+        case '/change-pass':
+            app = new changePass();
+            break;
+        case '/error':
+            app = new Page500();
+            break;
+        case '/pa':
+            app = new Profile();
+            break;
+        default:
+            app = new Page404;
+            break;
+    }
 
-    renderDOM(new Profile({}));
+    renderDOM(app);
 });

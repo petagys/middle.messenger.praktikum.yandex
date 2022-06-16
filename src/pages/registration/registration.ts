@@ -130,7 +130,7 @@ export class RegPage extends Block {
                     {{{Button text="Create profile" onClick=onSignUp}}}
                 </div>
                 <div class="block__link">
-                    <a href="index.hbs">Enter</a>
+                    <a href="${document.location.origin}/chats">Enter</a>
                 </div>
             </div>
         </div>

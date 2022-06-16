@@ -15,8 +15,8 @@ export class ChatPage extends Block {
         <div class="main">
             <div class="block__chats">
                 <div class="searchProfileBlock">
-                    <div class="block__link">
-                        <a href="profileInfo.hbs" class="greyLink">Profile ></a>
+                    <div class="block__link-profile">
+                        <a href="${document.location.origin}/pa" class="greyLink">Profile ></a>
                     </div>
                     <div class="block__search">
                         <input class="searchInput" placeholder="Search..." name="search" type="text" />
