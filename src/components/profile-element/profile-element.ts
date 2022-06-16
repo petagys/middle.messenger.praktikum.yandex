@@ -4,7 +4,11 @@ import { Validator, validateValue } from '../../helpers/validator';
 import './profile-element.css';
 
 interface ProfileElementProps {
-    validation?: Validator
+    validation?: Validator,
+    inputType?: string,
+    inputName?: string,
+    disabled?: string,
+    value?: string,
     onBlur?: () => void,
     onFocus?: () => void
 }
@@ -36,7 +40,7 @@ export class ProfileElement extends Block {
                <span class="infoBlock__label">
                    {{label}}
                </span>
-               <Input type=type name=inputName onBlur=onBlur onFocus=onFocus />
+               {{{Input type=inputType name=inputName disabled=disabled value=value }}}
             </div>
         `
     }

@@ -1,14 +1,13 @@
 import Block from '../../core/Block';
 import paData from '../../data/paData.json';
+import arrowBack from '../../images/arrow_left.svg';
 
 import '../../css/pa.css';
 
-interface ChangePassProps {
-    onClick: () => void
-}
+interface ProfileProps { };
 
-export class ChangePass extends Block {
-    constructor(props: ChangePassProps) {
+export class Profile extends Block {
+    constructor() {
         super({
             onClick: () => {
                 const inputs: NodeListOf<HTMLInputElement> = this.element?.querySelectorAll('input[type="password"]')!;
@@ -23,6 +22,7 @@ export class ChangePass extends Block {
     }
 
     render() {
+        console.log(arrowBack)
         return `
         <div>
             <div class="outer">
@@ -32,8 +32,8 @@ export class ChangePass extends Block {
                         <input type="file" name="avatar" id="avatar">
                     </div>
                 </div>
-                ${paData.pass.map(({ label, inputType, inputName }: Record<string, string>) =>
-            `{{{ProfileElement label="${label}" inputType="${inputType}" inputName="${inputName}" }}}`).join('')}
+                ${paData.pa.map(({ label, inputType, inputName, value }: Record<string, string>) =>
+            `{{{ProfileElement label="${label}" inputType="${inputType}" inputName="${inputName}" value="${value}" disabled="disabled"}}}`).join('')}
 
                 <div class="saveBlock">
                     {{{Button text="Save" onClick=onClick}}}
@@ -41,7 +41,7 @@ export class ChangePass extends Block {
             </div>
             <div class="return">
                 <a href="chat.hbs">
-                    <img class="icon" src="../images/arrow_left.svg" />
+                    <img class="icon" src="${arrowBack}" />
                 </a>
             </div>
         </div>

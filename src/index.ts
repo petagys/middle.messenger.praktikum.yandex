@@ -4,6 +4,8 @@ import RegPage from './pages/registration';
 import ChatPage from './pages/chat';
 import Page404 from './pages/404';
 import Page500 from './pages/500';
+import changePass from './pages/change-pass';
+import Profile from './pages/profile';
 import './app.css';
 
 import Button from './components/button';
@@ -34,5 +36,5 @@ document.addEventListener("DOMContentLoaded", () => {
     //     case: 
     // }
 
-    renderDOM(new Page500({}));
+    renderDOM(new Profile({}));
 });
