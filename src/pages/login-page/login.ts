@@ -1,16 +1,34 @@
 import Block from '../../core/Block';
 
 import '../../css/login-page.css';
-import { Validator } from '../../helpers/validator';
+import { validateValue, Validator } from '../../helpers/validator';
 
-interface LoginPageProps { }
+interface LoginPageProps {
+    onLogin: () => void
+}
 
 export class LoginPage extends Block {
     constructor(props: LoginPageProps) {
         super({
             ...props,
-            onInput: () => console.log('input'),
-            onFocus: () => console.log('focus'),
+            onLogin: () => {
+                const loginInput: HTMLInputElement = this.element?.querySelector('input[name="login"]')!;
+                const passwordInput: HTMLInputElement = this.element?.querySelector('input[name="password"]')!;
+                const result: { [key: string | Validator]: string } = Object.assign({ [loginInput.name]: loginInput.value },
+                    { [passwordInput.name]: passwordInput.value });
+                
+                const loginValidate: string = validateValue(loginInput.name, loginInput.value);
+                const passwordValidate: string = validateValue(passwordInput.name, passwordInput.value);
+                
+                if (loginValidate !== '') {
+                    this.refs.login.refs.error.setProps({ error: loginValidate })
+                } 
+                if (passwordValidate !== '') {
+                    this.refs.password.refs.error.setProps({ error: passwordValidate });
+                }
+                    console.log(result)
+                
+            }
         })
     }
     render() {
@@ -23,9 +41,7 @@ export class LoginPage extends Block {
                         name="login"
                         label="Login"
                         type="text"
-                        onFocus=onFocus
-                        onInput=onInput
-                        onBlur=onBlur
+                        ref="login"
                         validation="${Validator.login}" 
                     }}}
                 </div>
@@ -34,8 +50,8 @@ export class LoginPage extends Block {
                         name="password"
                         label="Password"
                         type="password"
-                        onFocus=onFocus
-                        onInput=onInput
+                        ref="password"
+                        validation="${Validator.password}" 
                     }}}
                 </div>
                 <div>

@@ -26,7 +26,7 @@ export default class Block<P = any> {
   eventBus: () => EventBus<Events>;
 
   protected state: any = {};
-  protected refs: { [key: string]: Block } = {};
+  refs: { [key: string]: Block } = {};
 
   public constructor(props?: P) {
     const eventBus = new EventBus<Events>();

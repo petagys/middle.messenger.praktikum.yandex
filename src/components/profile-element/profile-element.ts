@@ -1,21 +1,22 @@
 import Block from '../../core/Block';
 import { Validator, validateValue } from '../../helpers/validator';
-import './controlled-input.css';
 
-interface ControlledInputProps {
+import './profile-element.css';
+
+interface ProfileElementProps {
     validation?: Validator
     onBlur?: () => void,
     onFocus?: () => void
 }
 
-export class ControlledInput extends Block {
-    constructor({ validation, onBlur, onFocus, ...props }: ControlledInputProps) {
+export class ProfileElement extends Block {
+    constructor({ validation, onBlur, onFocus, ...props }: ProfileElementProps) {
         super({
             ...props,
             onBlur: onBlur ? onBlur : (e: FocusEvent) => {
-                const input = e.target as HTMLInputElement;
-                const value: string = input.value;
                 if (validation) {
+                    const input = e.target as HTMLInputElement;
+                    const value: string = input.value;
                     const errorText = validateValue(validation, value);
                     this.refs.error.setProps({ error: errorText });
                 }
@@ -31,10 +32,11 @@ export class ControlledInput extends Block {
 
     render(): string {
         return `
-            <div class="login__box">
-            {{{Input name=name type=type onFocus=onFocus onInput=onInput onBlur=onBlur}}}
-            <label for="${this.props.name}">{{label}}</label>
-            {{{Error ref='error'}}}
+            <div class="infoBlock">
+               <span class="infoBlock__label">
+                   {{label}}
+               </span>
+               <Input type=type name=inputName onBlur=onBlur onFocus=onFocus />
             </div>
         `
     }
