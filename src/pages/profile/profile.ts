@@ -19,9 +19,9 @@ export class Profile extends Block {
                     result[name] = value;
                 });
                 console.log(result);
-                console.log('Будет реализовано позже. Пока перебраывает на страницу регситрации. Переход произойдет через 5 секунд...')
+                console.log('Будет реализовано позже. Пока перебраcывает на страницу регситрации с аналогичным функционалом. Переход произойдет через 5 секунд...')
                 setTimeout(() => { window.location.href = `${document.location.origin}/registration` }, 5000);
-            }
+            },
         })
     }
 

@@ -32,7 +32,7 @@ export class ControlledInput extends Block {
     render(): string {
         return `
             <div class="login__box">
-            {{{Input name=name type=type onFocus=onFocus onInput=onInput onBlur=onBlur}}}
+            {{{Input name=name type=type onFocus=onFocus onBlur=onBlur}}}
             <label for="${this.props.name}">{{label}}</label>
             {{{Error ref='error'}}}
             </div>
