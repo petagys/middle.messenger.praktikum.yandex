@@ -26,7 +26,6 @@ export class Profile extends Block {
     }
 
     render() {
-        console.log(arrowBack)
         return `
         <div>
             <div class="outer">
