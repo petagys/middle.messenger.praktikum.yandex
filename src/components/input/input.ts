@@ -24,7 +24,7 @@ export class Input extends Block {
 
     render(): string {
         return `
-            <input type="{{type}}" name="{{name}}" {{disabled}} value="{{value}}" />
+            <input type="{{type}}" name="{{name}}" />
         `
     }
 

@@ -34,6 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     switch (currentLocation) {
         case '/login':
+        case '/':
             app = new LoginPage();
             break;
         case '/registration':

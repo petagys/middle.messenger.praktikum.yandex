@@ -40,3 +40,13 @@
 
     }
 }
+
+.errorInputBlock{
+  display: flex;
+  align-items: center;
+}
+
+.errorText {
+  color: rgba(241, 18, 18, 0.8);
+  margin-right: 8px;
+}

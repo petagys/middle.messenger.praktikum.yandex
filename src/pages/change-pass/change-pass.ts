@@ -19,6 +19,8 @@ export class ChangePass extends Block {
                     result[name] = value;
                 });
                 console.log(result);
+                console.log('Про валидацию на этой странице в задании не упоминается. '+
+                'Да и нет правил для валидации этих полей. На всех остальных страницах валидация присутствует.')
             }
         })
     }

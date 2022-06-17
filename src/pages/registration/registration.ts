@@ -35,7 +35,8 @@ export class RegPage extends Block {
 
                 Object.keys(errors).forEach(key => {
                     this.refs[key].refs.error.setProps({ error: errors[key] });
-                })
+                });
+                console.log(result);
             }
         })
     }

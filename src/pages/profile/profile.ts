@@ -3,6 +3,7 @@ import paData from '../../data/paData.json';
 import arrowBack from '../../images/arrow_left.svg';
 
 import '../../css/pa.css';
+import { validateValue } from '../../helpers/validator';
 
 interface ProfileProps {
     onClick?: () => void
@@ -12,15 +13,21 @@ export class Profile extends Block {
     constructor() {
         super({
             onClick: () => {
-                const inputs: NodeListOf<HTMLInputElement> = this.element?.querySelectorAll('input[disabled]')!;
+                const inputs: NodeListOf<HTMLInputElement> = this.element?.querySelectorAll('input[type="text"]')!;
                 const result: Record<string, string> = {}
+                const errors: { [key: string]: string } = {};
                 inputs.forEach(input => {
                     const { name, value } = input;
                     result[name] = value;
+                    const errorText: string = validateValue(name, value);
+                    if (errorText !== '') {
+                        errors[name] = errorText;
+                    }
                 });
+                Object.keys(errors).forEach(key => {
+                    this.refs[key].refs.error.setProps({ error: errors[key] });
+                })
                 console.log(result);
-                console.log('Будет реализовано позже. Пока перебраcывает на страницу регситрации с аналогичным функционалом. Переход произойдет через 5 секунд...')
-                setTimeout(() => { window.location.href = `${document.location.origin}/registration` }, 5000);
             },
         })
     }
@@ -35,8 +42,8 @@ export class Profile extends Block {
                         <input type="file" name="avatar" id="avatar">
                     </div>
                 </div>
-                ${paData.pa.map(({ label, inputType, inputName, value }: Record<string, string>) =>
-            `{{{ProfileElement label="${label}" inputType="${inputType}" inputName="${inputName}" value="${value}" disabled="disabled"}}}`).join('')}
+                ${paData.pa.map(({ label, inputType, inputName }: Record<string, string>) =>
+            `{{{ProfileElement label="${label}" inputType="${inputType}" inputName="${inputName}" ref="${inputName}" validation="${inputName}" }}}`).join('')}
 
                 <div class="saveBlock">
                     {{{Button text="Change profile data" onClick=onClick}}}

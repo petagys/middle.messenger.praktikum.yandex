@@ -65,10 +65,16 @@ const validationRules: { [key: string]: (value: string) => string } = {
     },
     message: (value: string) => {
         if (!value.length) {
-            return " empty_input"
+            return "Empty input"
         }
         return ''
-    }
+    },
+    display_name: (value: string) => {
+        if (!value.length) {
+            return "Empty display name!"
+        }
+        return ''
+    },
 
 }
 export function validateValue(rule: Validator | string, value: string) {
