@@ -12,3 +12,10 @@
 
 Ссылка на проект в netlify:
 https://cheerful-sawine-0b422c.netlify.app/
+
+Ссылка на ПР:
+https://github.com/petagys/middle.messenger.praktikum.yandex/pull/1
+
+Приветствую!
+Неправильно понял механизм сдачи работы. Всю реализацию сделал в другом репозитории...
+
