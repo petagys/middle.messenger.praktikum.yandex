@@ -58,6 +58,5 @@ document.addEventListener('DOMContentLoaded', () => {
             break;
     }
 
-    console.log(currentLocation, app);
     renderDOM(app);
 });
