@@ -30,7 +30,7 @@ export class ControlledInput extends Block {
         });
     }
 
-    static get blockName() {
+    static get blockName():string {
         return 'ControlledInput';
     }
 
