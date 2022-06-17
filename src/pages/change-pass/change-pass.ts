@@ -4,25 +4,22 @@ import arrowBack from '../../images/arrow_left.svg';
 
 import '../../css/pa.css';
 
-interface ChangePassProps {
-    onClick?: () => void
-}
-
 export class ChangePass extends Block {
     constructor() {
         super({
             onClick: () => {
                 const inputs: NodeListOf<HTMLInputElement> = this.element?.querySelectorAll('input[type="password"]')!;
-                const result: Record<string, string> = {}
+                const result: Record<string, string> = {};
                 inputs.forEach(input => {
                     const { name, value } = input;
                     result[name] = value;
                 });
-                console.log(result);
-                console.log('Про валидацию на этой странице в задании не упоминается. '+
-                'Да и нет правил для валидации этих полей. На всех остальных страницах валидация присутствует.')
-            }
-        })
+                console.log(result);// eslint-disable-line
+                // eslint-disable-next-line
+                console.log('Про валидацию на этой странице в задании не упоминается. '
+                + 'Да и нет правил для валидации этих полей. На всех остальных страницах валидация присутствует.');
+            },
+        });
     }
 
     render() {
@@ -35,8 +32,10 @@ export class ChangePass extends Block {
                         <input type="file" name="avatar" id="avatar">
                     </div>
                 </div>
-                ${paData.pass.map(({ label, inputType, inputName }: Record<string, string>) =>
-            `{{{ProfileElement label="${label}" inputType="${inputType}" inputName="${inputName}" }}}`).join('')}
+                ${
+        /* eslint-disable-next-line max-len */
+    paData.pass.map(({ label, inputType, inputName }: Record<string, string>) => `{{{ProfileElement label="${label}" inputType="${inputType}" inputName="${inputName}" }}}`).join('')
+}
 
                 <div class="saveBlock">
                     {{{Button text="Save" onClick=onClick}}}
@@ -48,6 +47,6 @@ export class ChangePass extends Block {
                 </a>
             </div>
         </div>
-        `
+        `;
     }
 }

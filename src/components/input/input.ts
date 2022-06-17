@@ -11,21 +11,26 @@ interface InputProps {
 }
 
 export class Input extends Block {
-    constructor({ onBlur, onFocus, onInput, ...props }: InputProps) {
+    constructor({
+        onBlur, onFocus, onInput, ...props
+    }: InputProps) {
         super({
             ...props,
             events: {
                 blur: onBlur,
                 focus: onFocus,
-                input: onInput
-            }
+                input: onInput,
+            },
         });
+    }
+
+    static get blockName() {
+        return 'Input';
     }
 
     render(): string {
         return `
             <input type="{{type}}" name="{{name}}" />
-        `
+        `;
     }
-
 }

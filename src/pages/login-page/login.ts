@@ -3,33 +3,31 @@ import Block from '../../core/Block';
 import '../../css/login-page.css';
 import { validateValue, Validator } from '../../helpers/validator';
 
-interface LoginPageProps {
-    onLogin?: () => void
-}
-
 export class LoginPage extends Block {
     constructor() {
         super({
             onLogin: () => {
                 const loginInput: HTMLInputElement = this.element?.querySelector('input[name="login"]')!;
                 const passwordInput: HTMLInputElement = this.element?.querySelector('input[name="password"]')!;
-                const result: { [key: string | Validator]: string } = Object.assign({ [loginInput.name]: loginInput.value },
-                    { [passwordInput.name]: passwordInput.value });
+                const result: { [key: string | Validator]: string } = {
+                    [loginInput.name]: loginInput.value,
+                    [passwordInput.name]: passwordInput.value,
+                };
 
                 const loginValidate: string = validateValue(loginInput.name, loginInput.value);
                 const passwordValidate: string = validateValue(passwordInput.name, passwordInput.value);
 
                 if (loginValidate !== '') {
-                    this.refs.login.refs.error.setProps({ error: loginValidate })
+                    this.refs.login.refs.error.setProps({ error: loginValidate });
                 }
                 if (passwordValidate !== '') {
                     this.refs.password.refs.error.setProps({ error: passwordValidate });
                 }
-                console.log(result)
-
-            }
-        })
+                console.log(result);// eslint-disable-line no-console
+            },
+        });
     }
+
     render() {
         return `
         <div class="block__outer">
@@ -62,6 +60,6 @@ export class LoginPage extends Block {
                 </div>
             </div>
         </div>
-        `
+        `;
     }
 }

@@ -5,16 +5,12 @@ import arrowBack from '../../images/arrow_left.svg';
 import '../../css/pa.css';
 import { validateValue } from '../../helpers/validator';
 
-interface ProfileProps {
-    onClick?: () => void
-};
-
 export class Profile extends Block {
     constructor() {
         super({
             onClick: () => {
                 const inputs: NodeListOf<HTMLInputElement> = this.element?.querySelectorAll('input[type="text"]')!;
-                const result: Record<string, string> = {}
+                const result: Record<string, string> = {};
                 const errors: { [key: string]: string } = {};
                 inputs.forEach(input => {
                     const { name, value } = input;
@@ -26,10 +22,10 @@ export class Profile extends Block {
                 });
                 Object.keys(errors).forEach(key => {
                     this.refs[key].refs.error.setProps({ error: errors[key] });
-                })
-                console.log(result);
+                });
+                console.log(result);// eslint-disable-line no-console
             },
-        })
+        });
     }
 
     render() {
@@ -42,8 +38,10 @@ export class Profile extends Block {
                         <input type="file" name="avatar" id="avatar">
                     </div>
                 </div>
-                ${paData.pa.map(({ label, inputType, inputName }: Record<string, string>) =>
-            `{{{ProfileElement label="${label}" inputType="${inputType}" inputName="${inputName}" ref="${inputName}" validation="${inputName}" }}}`).join('')}
+                ${
+    // eslint-disable-next-line max-len
+    paData.pa.map(({ label, inputType, inputName }: Record<string, string>) => `{{{ProfileElement label="${label}" inputType="${inputType}" inputName="${inputName}" ref="${inputName}" validation="${inputName}" }}}`).join('')
+}
 
                 <div class="saveBlock">
                     {{{Button text="Change profile data" onClick=onClick}}}
@@ -61,6 +59,6 @@ export class Profile extends Block {
                 </a>
             </div>
         </div>
-        `
+        `;
     }
 }

@@ -1,15 +1,12 @@
 import Block from '../../core/Block';
 import chatList from '../../data/chatList.json';
 import attache from '../../images/attache.svg';
-import arrow_right from '../../images/arrow_right.svg';
+import arrowRight from '../../images/arrow_right.svg';
 import menu from '../../images/menu.svg';
 
 import './chat.css';
 
-interface ChatPageProps { }
-
 export class ChatPage extends Block {
-
     render() {
         return `
         <div class="main">
@@ -22,8 +19,9 @@ export class ChatPage extends Block {
                         <input class="searchInput" placeholder="Search..." name="search" type="text" />
                     </div>
                     <div class="block__list">
-                        ${chatList.map(({ title, text, notifications, dateText }: Record<string, string | number>) =>
-            `{{{ChatElement title="${title}" text="${text}" notifications="${notifications}" dateText="${dateText}"}}}`).join('')}
+                        ${chatList.map(({
+        title, text, notifications, dateText, // eslint-disable-next-line
+    }: Record<string, string | number>) => `{{{ChatElement title="${title}" text="${text}" notifications="${notifications}" dateText="${dateText}"}}}`).join('')}
                     </div>
                 </div>
             </div>
@@ -45,10 +43,10 @@ export class ChatPage extends Block {
                         type="text"
                         name="message"
                         placeholder="Message" />
-                    <img class="icon__send" src="${arrow_right}" />
+                    <img class="icon__send" src="${arrowRight}" />
                 </div>
             </div>
         </div>
-        `
+        `;
     }
 }

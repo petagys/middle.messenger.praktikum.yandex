@@ -3,14 +3,11 @@ import Block from '../../core/Block';
 import '../../css/login-page.css';
 import { validateValue, Validator } from '../../helpers/validator';
 
-interface RegPageProps {
-    onConfirmBlur: () => void
-}
 export class RegPage extends Block {
     constructor() {
         super({
             onConfirmBlur: () => {
-                this.onConfirmBlur()
+                this.onConfirmBlur();
             },
             onConfirmFocus: () => {
                 this.setConfirm();
@@ -19,15 +16,15 @@ export class RegPage extends Block {
                 const inputs: NodeListOf<HTMLInputElement> = this.element?.querySelectorAll('input[name]')!;
 
                 const errors: { [key: string]: string } = {};
-                const result: {[key: string]: string} = {};
+                const result: { [key: string]: string } = {};
                 inputs.forEach(input => {
-                    const {name, value} = input;
+                    const { name, value } = input;
                     result[name] = value;
-                    if(name !== 'confirm_password'){
-                        const errorText:string = validateValue(name, value);
-                    if(errorText !== ''){
-                        errors[name] = errorText;
-                    }
+                    if (name !== 'confirm_password') {
+                        const errorText: string = validateValue(name, value);
+                        if (errorText !== '') {
+                            errors[name] = errorText;
+                        }
                     } else {
                         this.onConfirmBlur();
                     }
@@ -36,14 +33,16 @@ export class RegPage extends Block {
                 Object.keys(errors).forEach(key => {
                     this.refs[key].refs.error.setProps({ error: errors[key] });
                 });
+                // eslint-disable-next-line
                 console.log(result);
-            }
-        })
+            },
+        });
     }
 
     onConfirmBlur(): void {
-        const pass: string = (<HTMLInputElement>this.element?.querySelector('input[name="password"]'))!.value;
-        const confirm: string = (<HTMLInputElement>this.element?.querySelector('input[name="confirm_password"]'))!.value;
+        const pass: string = (<HTMLInputElement> this.element?.querySelector('input[name="password"]'))!.value;
+        const confirm: string = (<HTMLInputElement> this.element?.querySelector('input[name="confirm_password"]'))!
+            .value;
         if (pass !== confirm || confirm === '') {
             this.setConfirm('Passwords do not match!');
         } else {
@@ -51,8 +50,8 @@ export class RegPage extends Block {
         }
     }
 
-    setConfirm(text:string = ''):void{
-        this.refs.confirm_password.refs.error.setProps({error: text});
+    setConfirm(text: string = ''): void {
+        this.refs.confirm_password.refs.error.setProps({ error: text });
     }
 
     render() {
@@ -135,6 +134,6 @@ export class RegPage extends Block {
                 </div>
             </div>
         </div>
-        `
+        `;
     }
 }

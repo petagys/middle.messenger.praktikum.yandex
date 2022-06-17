@@ -11,11 +11,14 @@ export class Button extends Block {
         super({ text, events: { click: onClick } });
     }
 
+    static get blockName():string {
+        return 'Button';
+    }
+
     render(): string {
         return `<div>
             <button class="btn" type="button">{{text}}</button>
             <div>
-        `
+        `;
     }
-
 }

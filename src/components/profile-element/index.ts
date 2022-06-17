@@ -1,1 +1,1 @@
-export { ProfileElement  as default} from './profile-element';
+export { ProfileElement as default } from './profile-element';

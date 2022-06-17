@@ -1,10 +1,12 @@
-import { Block, renderDOM, registerComponent, BlockConstructable } from './core';
+import {
+    Block, renderDOM, registerComponent, BlockConstructable,
+} from './core';
 import LoginPage from './pages/login-page';
 import RegPage from './pages/registration';
 import ChatPage from './pages/chat';
 import Page404 from './pages/404';
 import Page500 from './pages/500';
-import changePass from './pages/change-pass';
+import ChangePass from './pages/change-pass';
 import Profile from './pages/profile';
 import './app.css';
 
@@ -15,21 +17,20 @@ import ControlledInput from './components/controlled-input';
 import ChatElement from './components/chat-element';
 import ProfileElement from './components/profile-element';
 
-
-const components: BlockConstructable[] = [
+const components: BlockConstructable<any>[] = [
     Button,
     Input,
     Error,
     ControlledInput,
     ChatElement,
-    ProfileElement
+    ProfileElement,
 ];
 
-components.forEach((Component) => registerComponent(Component));
+components.forEach((Component) => registerComponent(Component, Component.blockName));
 
 const currentLocation: string = document.location.pathname;
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', () => {
     let app = {} as Block;
 
     switch (currentLocation) {
@@ -44,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
             app = new ChatPage();
             break;
         case '/change-pass':
-            app = new changePass();
+            app = new ChangePass();
             break;
         case '/error':
             app = new Page500();
@@ -53,9 +54,10 @@ document.addEventListener("DOMContentLoaded", () => {
             app = new Profile();
             break;
         default:
-            app = new Page404;
+            app = new Page404();
             break;
     }
 
+    console.log(currentLocation, app);
     renderDOM(app);
 });

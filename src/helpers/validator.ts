@@ -37,46 +37,46 @@ const validationRules: { [key: string]: (value: string) => string } = {
             return 'Password maust contain one number!';
         }
 
-        return ''
+        return '';
     },
     email: (value: string) => {
-        if (!/^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/.test(value)) {
+        if (!/^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+\.([A-Za-z]{2,4})$/.test(value)) {
             return 'Invalid email!';
         }
         return '';
     },
     first_name: (value: string) => {
         if (!/^([A-Z][a-z]+)|([А-Я][а-я]+)$/.test(value)) {
-            return 'Invalid name!'
+            return 'Invalid name!';
         }
         return '';
     },
     second_name: (value: string) => {
         if (!/^([A-Z][a-z]+)|([А-Я][а-я]+)$/.test(value)) {
-            return 'Invalid surname!'
+            return 'Invalid surname!';
         }
         return '';
     },
     phone: (value: string) => {
         if (!/^\+?\d{10,15}$/.test(value)) {
-            return 'Invalid phone number!'
+            return 'Invalid phone number!';
         }
         return '';
     },
     message: (value: string) => {
         if (!value.length) {
-            return "Empty input"
+            return 'Empty input';
         }
-        return ''
+        return '';
     },
     display_name: (value: string) => {
         if (!value.length) {
-            return "Empty display name!"
+            return 'Empty display name!';
         }
-        return ''
+        return '';
     },
 
-}
+};
 export function validateValue(rule: Validator | string, value: string) {
     return validationRules[rule](value);
 }

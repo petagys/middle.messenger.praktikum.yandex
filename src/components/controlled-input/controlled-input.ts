@@ -9,24 +9,29 @@ interface ControlledInputProps {
 }
 
 export class ControlledInput extends Block {
-    constructor({ validation, onBlur, onFocus, ...props }: ControlledInputProps) {
+    constructor({
+        validation, onBlur, onFocus, ...props
+    }: ControlledInputProps) {
         super({
             ...props,
-            onBlur: onBlur ? onBlur : (e: FocusEvent) => {
+            onBlur: onBlur || ((e: FocusEvent) => {
                 const input = e.target as HTMLInputElement;
-                const value: string = input.value;
+                const { value } = input;
                 if (validation) {
                     const errorText = validateValue(validation, value);
                     this.refs.error.setProps({ error: errorText });
                 }
-            }
-            ,
-            onFocus: onFocus ? onFocus : () => {
+            }),
+            onFocus: onFocus || (() => {
                 if (validation) {
                     this.refs.error.setProps({ error: '' });
                 }
-            }
+            }),
         });
+    }
+
+    static get blockName() {
+        return 'ControlledInput';
     }
 
     render(): string {
@@ -36,7 +41,6 @@ export class ControlledInput extends Block {
             <label for="${this.props.name}">{{label}}</label>
             {{{Error ref='error'}}}
             </div>
-        `
+        `;
     }
-
 }

@@ -4,7 +4,6 @@ import err404 from '../../images/404.svg';
 import '../../css/error.css';
 
 export class Page404 extends Block {
-
     render() {
         return `
             <div class="outer">
@@ -12,6 +11,6 @@ export class Page404 extends Block {
                 <h2>Страница не найдена</h2>
                 <h3>Поворот не туда...</div>
             </div>
-        `
+        `;
     }
 }

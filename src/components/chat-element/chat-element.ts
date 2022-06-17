@@ -9,6 +9,10 @@ interface ChatElementProps {
 }
 
 export class ChatElement extends Block {
+    static get blockName() {
+        return 'ChatElement';
+    }
+
     render(): string {
         return `
             <div class="chat">
@@ -26,7 +30,6 @@ export class ChatElement extends Block {
                     <div class="chat__notification">{{notifications}}</div>
                 </div>
             </div>
-        `
+        `;
     }
-
 }

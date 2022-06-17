@@ -15,25 +15,29 @@ interface ProfileElementProps {
 }
 
 export class ProfileElement extends Block {
-    constructor({ validation, onBlur, onFocus, ...props }: ProfileElementProps) {
-        console.log(props)
+    constructor({
+        validation, onBlur, onFocus, ...props
+    }: ProfileElementProps) {
         super({
             ...props,
-            onBlur: onBlur ? onBlur : (e: FocusEvent) => {
+            onBlur: onBlur || ((e: FocusEvent) => {
                 if (validation) {
                     const input = e.target as HTMLInputElement;
-                    const value: string = input.value;
+                    const { value } = input;
                     const errorText = validateValue(validation, value);
                     this.refs.error.setProps({ error: errorText });
                 }
-            }
-            ,
-            onFocus: onFocus ? onFocus : () => {
+            }),
+            onFocus: onFocus || (() => {
                 if (validation) {
                     this.refs.error.setProps({ error: '' });
                 }
-            }
+            }),
         });
+    }
+
+    static get blockName() {
+        return 'ProfileElement';
     }
 
     render(): string {
@@ -47,7 +51,6 @@ export class ProfileElement extends Block {
                 {{{Input type=inputType name=inputName onBlur=onBlur onFocus=onFocus }}}
                </div>
             </div>
-        `
+        `;
     }
-
 }
