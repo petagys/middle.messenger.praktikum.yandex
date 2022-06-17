@@ -1,0 +1,18 @@
+---
+title: Personal Account
+---
+
+{{!< profile}} 
+    {{#each paData.pa}}
+    {{> profileElement label=this.label value=this.value inputType=this.inputType inputName=this.inputName}}
+    {{/each}}
+
+    <div class="infoBlock left">
+        <a href="profileInfo.hbs">Change profile data</a>
+    </div>
+    <div class="infoBlock left">
+        <a href="changePass.hbs">Change password</a>
+    </div>
+    <div class="infoBlock left">
+        <a href="index.hbs" class="exit">Log out</a>
+    </div>

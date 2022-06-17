@@ -1,0 +1,117 @@
+.outer {
+    padding: 24px;
+    width: 66.6667%;
+    margin: 0;
+    text-align: center;
+    border-radius: 12px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    & > .left {
+        justify-content: left;
+        margin-top: 40px;
+    }
+    
+    & > .left ~ .left {
+        margin-top: 0;
+    }
+}
+
+.circle {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    background-color: #efefef;
+    margin: 0 auto 92px;
+    cursor: pointer;
+
+    &:hover{
+        background: #000000;
+        opacity: 0.5;
+    }
+
+    &__text {
+        color: #fff;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        position: relative;
+
+        &:hover {
+            opacity: 1;
+        }
+
+        & > input[type=file]{
+            z-index: -1;
+            opacity: 0;
+            position: absolute;
+            width: 0;
+        }
+
+        & > label {
+            cursor: pointer;
+            z-index: 1;
+            color: #fff;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+}
+
+.infoBlock {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #eaeaea;
+    
+    &__label {
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 16px;
+        text-align: left;
+    }
+
+}
+
+.profileInput {
+    border: none;
+    color: #999;
+    font-size: 16px;
+    line-height: 16px;
+    background-color: #fff;
+    text-align: right;
+}
+
+.exit {
+    color: #FF0000;
+}
+
+.saveBlock {
+    margin-top: 48px;
+}
+
+.return {
+    position: absolute;
+    width: 64px;
+    background-color: #fbfbfb;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #dadada;
+    }
+}

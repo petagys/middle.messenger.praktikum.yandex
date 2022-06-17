@@ -1,0 +1,25 @@
+---
+title: Log in
+formTitle: Log In
+css:
+- input.css
+- btn.css
+---
+
+{{!< auth}} <div class="block__inputs">
+    <div class="block__login">
+        {{> input name="login" label="Login" type="text"}}
+    </div>
+    <div class="block__login">
+        {{> input name="password" label="Password" type="password"}}
+    </div>
+    </div>
+
+    <div>
+        <a href="chat.hbs">
+            {{> button text="Enter"}}
+        </a>
+    </div>
+    <div class="block__link">
+        <a href="registration.hbs">Create account</a>
+    </div>

@@ -1,0 +1,60 @@
+{
+    "pa": [
+        {
+            "label": "Name",
+            "value": "Petr",
+            "inputType": "text",
+            "inputName": "first_name"
+        },
+        {
+            "label": "Surname",
+            "value": "Watcher",
+            "inputType": "text",
+            "inputName": "second_name"
+        },
+        {
+            "label": "Login",
+            "value": "petagys",
+            "inputType": "text",
+            "inputName": "login"
+        },
+        {
+            "label": "Email",
+            "value": "rambler@yandex.ru",
+            "inputType": "text",
+            "inputName": "email"
+        },
+        {
+            "label": "Phone",
+            "value": "+7 (999) 777-99-77",
+            "inputType": "text",
+            "inputName": "phone"
+        },
+        {
+            "label": "Name in chat",
+            "value": "Petr",
+            "inputType": "text",
+            "inputName": "display_name"
+        }
+    ],
+    "pass": [
+        {
+            "label": "Old password",
+            "value": "12345678",
+            "inputType": "password",
+            "inputName": "oldPassword"
+        },
+        {
+            "label": "New password",
+            "value": "0987654321",
+            "inputType": "password",
+            "inputName": "newPassword"
+        },
+        {
+            "label": "Confirm new password",
+            "value": "0987654321",
+            "inputType": "password",
+            "inputName": "confirm"
+        }
+    ]
+}

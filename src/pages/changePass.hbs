@@ -1,0 +1,13 @@
+---
+title: Change Pasword
+css:
+- btn.css
+---
+
+{{!< profile}} {{#each paData.pass}} {{> profileElement label=this.label value=this.value inputType=this.inputType
+    inputName=this.inputName}}
+    {{/each}}
+
+    <div class="saveBlock">
+        {{> button text="Save"}}
+    </div> 

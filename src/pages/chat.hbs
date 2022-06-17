@@ -1,0 +1,41 @@
+---
+title: Chat
+css:
+- chat.css
+---
+
+{{!< base}} <div class="main">
+    <div class="block__chats">
+        <div class="searchProfileBlock">
+            <div class="block__link">
+                <a href="profileInfo.hbs" class="greyLink">Profile ></a>
+            </div>
+            <div class="block__search">
+                <input class="searchInput" placeholder="Search..." name="search" type="text" />
+            </div>
+            <div class="block__list">
+                {{#each chatList}}
+                {{> chatElement title=this.title notifications=this.notifications text=this.text
+                dateText=this.dateText}}
+                {{/each}}
+            </div>
+        </div>
+    </div>
+    <div class="block__personalChat">
+        <div class="flexBlock chatHeader">
+            <div class="flexBlock">
+                <div class="chat__avatar"></div>
+                <span class="chat__name">Дмитрий Виноградов</span>
+            </div>
+            <img class="icon" src="../images/menu.svg" />
+        </div>
+        <div class="chatArea">
+
+        </div>
+        <div class="flexBlock chatFooter">
+            <img class="icon__attachment" src="../images/attache.svg" />
+            <input class="messageField" type="text" name="message" placeholder="Message" />
+            <img class="icon__send" src="../images/arrow_right.svg" />
+        </div>
+    </div>
+    </div>
