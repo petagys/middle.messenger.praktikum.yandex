@@ -3,7 +3,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 12px 0;
-    border-bottom: 1px solid #eaeaea;
+    border-bottom: 1px solid #EAEAEA;
     
     &__label {
         font-weight: 500;
@@ -19,7 +19,7 @@
         font-weight: 400;
         line-height: 1.5;
         color: #212529;
-        background-color: #fff;
+        background-color: #FFF;
         background-clip: padding-box;
         border: 1px solid #00A523;
         border-radius: 0.25rem;
@@ -27,14 +27,14 @@
         
         &:focus {
           color: #212529;
-          background-color: #fff;
+          background-color: #FFF;
           border-color: #00A523;
           outline: 0;
-          box-shadow: 0 0 0 0.2rem #00a52378;
+          box-shadow: 0 0 0 0.2rem #00A52378;
         }
 
         &:disabled,[readonly] {
-          background-color: #f5f5f5;
+          background-color: #F5F5F5;
           opacity: 1;
         }
 
