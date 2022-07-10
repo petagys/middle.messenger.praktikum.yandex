@@ -31,19 +31,19 @@ export class ChatPage extends Block {
                         <div class="chat__avatar"></div>
                         <span class="chat__name">Дмитрий Виноградов</span>
                     </div>
-                    <img class="icon" src="${menu}" />
+                    <img class="icon" src="${menu}" alt="menu" />
                 </div>
                 <div class="chatArea">
 
                 </div>
                 <div class="flexBlock chatFooter">
-                    <img class="icon__attachment" src="${attache}" />
+                    <img class="icon__attachment" src="${attache}" alt="attache" />
                     <input
                         class="messageField"
                         type="text"
                         name="message"
                         placeholder="Message" />
-                    <img class="icon__send" src="${arrowRight}" />
+                    <img class="icon__send" src="${arrowRight}" alt="send" />
                 </div>
             </div>
         </div>

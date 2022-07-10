@@ -51,14 +51,14 @@ export default class Block<P = any> {
         eventBus.emit(Block.EVENTS.INIT, this.props);
     }
 
-    _registerEvents(eventBus: EventBus<Events>) {
+    private _registerEvents(eventBus: EventBus<Events>) {
         eventBus.on(Block.EVENTS.INIT, this.init.bind(this));
         eventBus.on(Block.EVENTS.FLOW_CDM, this._componentDidMount.bind(this));
         eventBus.on(Block.EVENTS.FLOW_CDU, this._componentDidUpdate.bind(this));
         eventBus.on(Block.EVENTS.FLOW_RENDER, this._render.bind(this));
     }
 
-    _createResources() {
+    private _createResources() {
         this._element = this._createDocumentElement('div');
     }
 
@@ -71,14 +71,14 @@ export default class Block<P = any> {
         this.eventBus().emit(Block.EVENTS.FLOW_RENDER, this.props);
     }
 
-    _componentDidMount(props: P) {
+    private _componentDidMount(props: P) {
         this.componentDidMount(props);
     }
 
     componentDidMount(props: P) {
     }
 
-    _componentDidUpdate(oldProps: P, newProps: P) {
+    private _componentDidUpdate(oldProps: P, newProps: P) {
         const response = this.componentDidUpdate(oldProps, newProps);
         if (!response) {
             return;
@@ -110,7 +110,7 @@ export default class Block<P = any> {
         return this._element;
     }
 
-    _render() {
+    private _render() {
         const fragment = this._compile();
 
         this._removeEvents();
@@ -139,35 +139,29 @@ export default class Block<P = any> {
         return this.element!;
     }
 
-    _makePropsProxy(props: any): any {
-    // Можно и так передать this
-    // Такой способ больше не применяется с приходом ES6+
-        const self = this;
+    private _makePropsProxy = (props: any): any => new Proxy(props as unknown as object, {
+        get(target: Record<string, unknown>, prop: string) {
+            const value = target[prop];
+            return typeof value === 'function' ? value.bind(target) : value;
+        },
+        set: (target: Record<string, unknown>, prop: string, value: unknown) => {
+            target[prop] = value;
 
-        return new Proxy(props as unknown as object, {
-            get(target: Record<string, unknown>, prop: string) {
-                const value = target[prop];
-                return typeof value === 'function' ? value.bind(target) : value;
-            },
-            set(target: Record<string, unknown>, prop: string, value: unknown) {
-                target[prop] = value;
+            // Запускаем обновление компоненты
+            // Плохой cloneDeep, в след итерации нужно заставлять добавлять cloneDeep им самим
+            this.eventBus().emit(Block.EVENTS.FLOW_CDU, { ...target, prop }, target);
+            return true;
+        },
+        deleteProperty() {
+            throw new Error('Нет доступа');
+        },
+    }) as unknown as P;
 
-                // Запускаем обновление компоненты
-                // Плохой cloneDeep, в след итерации нужно заставлять добавлять cloneDeep им самим
-                self.eventBus().emit(Block.EVENTS.FLOW_CDU, { ...target, prop }, target);
-                return true;
-            },
-            deleteProperty() {
-                throw new Error('Нет доступа');
-            },
-        }) as unknown as P;
-    }
-
-    _createDocumentElement(tagName: string) {
+    private _createDocumentElement(tagName: string) {
         return document.createElement(tagName);
     }
 
-    _removeEvents() {
+    private _removeEvents() {
         const { events } = this.props as any;
 
         if (!events || !this._element) {
@@ -179,7 +173,7 @@ export default class Block<P = any> {
         });
     }
 
-    _addEvents() {
+    private _addEvents() {
         const { events } = this.props as any;
 
         if (!events) {
@@ -191,7 +185,7 @@ export default class Block<P = any> {
         });
     }
 
-    _compile(): DocumentFragment {
+    private _compile(): DocumentFragment {
         const fragment = document.createElement('template');
 
         /**

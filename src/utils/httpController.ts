@@ -1,4 +1,4 @@
-const enum METHODS {
+const enum Methods {
     GET = 'GET',
     PUT = 'PUT',
     POST = 'POST',
@@ -17,48 +17,48 @@ function queryStringify(data: Record<string | number, any>): string {
     return result;
 }
 
-interface upperOptions {
+interface UpperOptions {
     data?: Record<string | number, any>,
     timeout?: number,
     headers?: Record<string, string>
 }
 
-interface lowerOptions {
+interface LowerOptions {
     data?: Record<string | number, unknown> | any,
     headers?: Record<string, string>,
-    method: METHODS
+    method: Methods
 }
 
 class HTTPTransport {
-    get = (url: string, options: upperOptions = {}) => {
+    get = (url: string, options: UpperOptions = {}) => {
         let getUrl:string = url;
         if (options.data) {
             getUrl += queryStringify(options.data);
         }
-        return this._request(getUrl, { ...options, method: METHODS.GET }, options.timeout);
+        return this._request(getUrl, { ...options, method: Methods.GET }, options.timeout);
     };
 
     put = (
         url:string,
-        options: upperOptions = {},
-    ) => this._request(url, { ...options, method: METHODS.PUT }, options.timeout);
+        options: UpperOptions = {},
+    ) => this._request(url, { ...options, method: Methods.PUT }, options.timeout);
 
     post = (
         url:string,
-        options: upperOptions = {},
-    ) => this._request(url, { ...options, method: METHODS.POST }, options.timeout);
+        options: UpperOptions = {},
+    ) => this._request(url, { ...options, method: Methods.POST }, options.timeout);
 
     delete = (
         url:string,
-        options: upperOptions = {},
-    ) => this._request(url, { ...options, method: METHODS.DELETE }, options.timeout);
+        options: UpperOptions = {},
+    ) => this._request(url, { ...options, method: Methods.DELETE }, options.timeout);
 
     // PUT, POST, DELETE
 
     // options:
     // headers — obj
     // data — obj
-    protected _request = (url: string, options: lowerOptions, timeout:number = 5000) => {
+    protected _request = (url: string, options: LowerOptions, timeout:number = 5000) => {
         const { data, headers, method } = options;
         return new Promise((resolve, reject) => {
             const xhr:XMLHttpRequest = new XMLHttpRequest();
@@ -79,7 +79,7 @@ class HTTPTransport {
             xhr.onerror = reject;
             xhr.ontimeout = reject;
 
-            if (method === METHODS.GET || !data) {
+            if (method === Methods.GET || !data) {
                 xhr.send();
             } else {
                 xhr.send(data);
