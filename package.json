@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "description": "web messanger from course from Yandex.Practicum",
   "scripts": {
-    "watch": "parcel src/pages/index.hbs --no-cache && parcel watch ./*",
+    "watch": "parcel src/index.html --no-cache && parcel watch ./*",
     "start": "node index.js",
-    "build": "parcel build src/pages/index.hbs"
+    "build": "parcel build src/index.html",
+    "lint": "eslint . --ext .ts",
+    "lint-fix": "eslint . --ext .ts --fix"
   },
   "repository": {
     "type": "git",
@@ -24,12 +26,23 @@
   },
   "homepage": "https://github.com/petagys/yandex-web-messanger#readme",
   "devDependencies": {
-    "@anikin/parcel-transformer-handlebars": "^1.0.9",
-    "autoprefixer": "^10.4.7",
-    "express": "^4.18.1",
-    "parcel": "^2.3.2",
-    "postcss": "^8.4.14",
-    "postcss-nested": "^5.0.6",
-    "postcss-preset-env": "^7.6.0"
+    "@anikin/parcel-transformer-handlebars": "1.0.9",
+    "@types/node": "17.0.43",
+    "@typescript-eslint/eslint-plugin": "^5.28.0",
+    "@typescript-eslint/parser": "^5.28.0",
+    "autoprefixer": "10.4.7",
+    "eslint": "^8.17.0",
+    "eslint-config-airbnb": "19.0.4",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "express": "4.18.1",
+    "nanoid": "4.0.0",
+    "parcel": "2.4.0",
+    "postcss": "8.4.14",
+    "postcss-import": "14.1.0",
+    "postcss-nested": "5.0.6",
+    "postcss-preset-env": "7.6.0",
+    "stylelint": "^14.9.1",
+    "typescript": "4.7.3"
   }
 }
