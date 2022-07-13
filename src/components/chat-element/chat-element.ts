@@ -9,9 +9,7 @@ interface ChatElementProps {
 }
 
 export class ChatElement extends Block {
-    static get blockName():string {
-        return 'ChatElement';
-    }
+    static componentName = 'ChatElement';
 
     render(): string {
         return `

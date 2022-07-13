@@ -30,9 +30,7 @@ export class ControlledInput extends Block {
         });
     }
 
-    static get blockName():string {
-        return 'ControlledInput';
-    }
+    static componentName = 'ControlledInput';
 
     render(): string {
         return `

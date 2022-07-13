@@ -2,11 +2,12 @@ import { nanoid } from 'nanoid';
 import Handlebars from 'handlebars';
 import EventBus from './EventBus';
 
-interface BlockMeta<P = any> {
-  props: P;
-}
-
 type Events = Values<typeof Block.EVENTS>;
+
+export interface BlockClass<P> extends Function {
+    new(props: P): Block<P>;
+    componentName?: string;
+}
 
 export default class Block<P = any> {
     static EVENTS = {
@@ -17,8 +18,6 @@ export default class Block<P = any> {
     } as const;
 
     public id = nanoid(6);
-
-    private readonly _meta: BlockMeta;
 
     protected _element: Nullable<HTMLElement> = null;
 
@@ -32,12 +31,10 @@ export default class Block<P = any> {
 
     refs: { [key: string]: Block } = {};
 
+    public static componentName?: string;
+
     public constructor(props?: P) {
         const eventBus = new EventBus<Events>();
-
-        this._meta = {
-            props,
-        };
 
         this.getStateFromProps(props);
 

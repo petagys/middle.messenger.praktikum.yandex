@@ -1,6 +1,5 @@
 import Block from '../../core/Block';
 import paData from '../../data/paData.json';
-import arrowBack from '../../images/arrow_left.svg';
 
 import '../../css/pa.css';
 
@@ -41,11 +40,7 @@ export class ChangePass extends Block {
                     {{{Button text="Save" onClick=onClick}}}
                 </div> 
             </div>
-            <div class="return">
-                <a href="${document.location.origin}/chats">
-                    <img class="icon" src="${arrowBack}" />
-                </a>
-            </div>
+            {{{Back}}}
         </div>
         `;
     }

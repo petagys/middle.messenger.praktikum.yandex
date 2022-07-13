@@ -1,62 +1,54 @@
 import {
-    Block, renderDOM, registerComponent, BlockConstructable,
+    registerComponent, Store, Router,
 } from './core';
-import LoginPage from './pages/login-page';
-import RegPage from './pages/registration';
-import ChatPage from './pages/chat';
-import Page404 from './pages/404';
-import Page500 from './pages/500';
-import ChangePass from './pages/change-pass';
-import Profile from './pages/profile';
 import './app.css';
 
-import Button from './components/button';
-import Input from './components/input';
-import Error from './components/error';
-import ControlledInput from './components/controlled-input';
-import ChatElement from './components/chat-element';
-import ProfileElement from './components/profile-element';
+import * as components from './components';
+import { defaultState } from './store';
+import { getScreenComponent, Screens } from './utils/screenList';
 
-const components: BlockConstructable<any>[] = [
-    Button,
-    Input,
-    Error,
-    ControlledInput,
-    ChatElement,
-    ProfileElement,
-];
+Object.values(components).forEach((Component: any) => registerComponent(Component));
 
-components.forEach((Component) => registerComponent(Component, Component.blockName));
-
-const currentLocation: string = document.location.pathname;
+declare global {
+    interface Window {
+        store: Store<AppState>;
+        router: Router;
+    }
+}
 
 document.addEventListener('DOMContentLoaded', () => {
-    let app = {} as Block;
+    const store = new Store<AppState>(defaultState);
+    const router = new Router();
 
-    switch (currentLocation) {
-        case '/login':
-        case '/':
-            app = new LoginPage();
-            break;
-        case '/registration':
-            app = new RegPage();
-            break;
-        case '/chats':
-            app = new ChatPage();
-            break;
-        case '/change-pass':
-            app = new ChangePass();
-            break;
-        case '/error':
-            app = new Page500();
-            break;
-        case '/pa':
-            app = new Profile();
-            break;
-        default:
-            app = new Page404();
-            break;
-    }
+    window.router = router;
+    window.store = store;
 
-    renderDOM(app);
+    store.on('changed', (prevState, nextState) => {
+        if (process.env.DEBUG) {
+            // eslint-disable-next-line no-console
+            console.log(
+                '%cstore updated',
+                'background: #222; color: #bada55',
+                nextState,
+            );
+        }
+    });
+    /**
+   * Инициализируем роутер
+   */
+    router
+        .use('/', getScreenComponent(Screens.LoginPage))
+        .use('/login', getScreenComponent(Screens.LoginPage))
+        .use('/change-pass', getScreenComponent(Screens.ChangePass))
+        .use('/pa', getScreenComponent(Screens.Profile))
+        .use('/error', getScreenComponent(Screens.Page500))
+        .use('/registration', getScreenComponent(Screens.Registration))
+        .use('/chats', getScreenComponent(Screens.Chat))
+        .use('*', getScreenComponent(Screens.Page404))
+        .start();
+
+    /**
+     * Загружаем данные для приложения
+     */
+    // store.dispatch(initApp);
 });

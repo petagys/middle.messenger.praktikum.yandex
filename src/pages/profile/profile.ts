@@ -1,13 +1,22 @@
 import Block from '../../core/Block';
 import paData from '../../data/paData.json';
-import arrowBack from '../../images/arrow_left.svg';
 
 import '../../css/pa.css';
 import { validateValue } from '../../helpers/validator';
+import { withStore } from '../../utils/withStore';
+import { Router, Store } from '../../core';
+import { withRouter } from '../../utils/withRouter';
 
-export class Profile extends Block {
-    constructor() {
+type ProfileProps = {
+    router: Router,
+    store: Store<AppState>,
+    onClick?: () => void
+}
+
+class Profile extends Block<ProfileProps> {
+    constructor(props: ProfileProps) {
         super({
+            ...props,
             onClick: () => {
                 const inputs: NodeListOf<HTMLInputElement> = this.element?.querySelectorAll('input[type="text"]')!;
                 const result: Record<string, string> = {};
@@ -28,7 +37,23 @@ export class Profile extends Block {
         });
     }
 
+    componentDidMount() {
+        if (!this.props.store.getState().user) {
+            this.props.router.go('/');
+        }
+    }
+
     render() {
+        if (!this.props.store.getState().user) {
+            return `
+        <div>
+            <div class="outer">
+                User isn't authorized!
+            </div>
+        </div>
+        `;
+        }
+
         return `
         <div>
             <div class="outer">
@@ -53,12 +78,10 @@ export class Profile extends Block {
                     <a href="${document.location.origin}/login" class="exit">Log out</a>
                 </div>
             </div>
-            <div class="return">
-                <a href="${document.location.origin}/chats">
-                    <img class="icon" src="${arrowBack}" />
-                </a>
-            </div>
+            {{{Back}}}
         </div>
         `;
     }
 }
+
+export default withRouter(withStore(Profile));

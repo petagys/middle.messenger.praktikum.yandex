@@ -24,9 +24,7 @@ export class Input extends Block {
         });
     }
 
-    static get blockName():string {
-        return 'Input';
-    }
+    static componentName = 'Input';
 
     render(): string {
         return `
