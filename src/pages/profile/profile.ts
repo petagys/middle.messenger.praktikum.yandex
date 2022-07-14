@@ -39,11 +39,12 @@ class Profile extends Block<ProfileProps> {
 
     componentDidMount() {
         if (!this.props.store.getState().user) {
-            this.props.router.go('/');
+            // this.props.router.go('/');
         }
     }
 
     render() {
+        console.log(this.props.store.getState())
         if (!this.props.store.getState().user) {
             return `
         <div>

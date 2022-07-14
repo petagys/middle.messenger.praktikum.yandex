@@ -6,6 +6,7 @@ import './app.css';
 import * as components from './components';
 import { defaultState } from './store';
 import { getScreenComponent, Screens } from './utils/screenList';
+import { initApp } from './services/initApp';
 
 Object.values(components).forEach((Component: any) => registerComponent(Component));
 
@@ -50,5 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * Загружаем данные для приложения
      */
-    // store.dispatch(initApp);
+    setTimeout(() => {
+        store.dispatch(initApp);
+    }, 100);
 });

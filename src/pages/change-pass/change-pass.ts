@@ -2,10 +2,20 @@ import Block from '../../core/Block';
 import paData from '../../data/paData.json';
 
 import '../../css/pa.css';
+import { withStore } from '../../utils/withStore';
+import { withRouter } from '../../utils/withRouter';
+import { Router, Store } from '../../core';
 
-export class ChangePass extends Block {
-    constructor() {
+type ChangePassProps = {
+    router: Router,
+    store: Store<AppState>,
+    onClick: () => void
+}
+
+class ChangePass extends Block<ChangePassProps> {
+    constructor(props: ChangePassProps) {
         super({
+            ...props,
             onClick: () => {
                 const inputs: NodeListOf<HTMLInputElement> = this.element?.querySelectorAll('input[type="password"]')!;
                 const result: Record<string, string> = {};
@@ -21,7 +31,22 @@ export class ChangePass extends Block {
         });
     }
 
+    componentDidMount() {
+        if (!this.props.store.getState().user) {
+            this.props.router.go('/');
+        }
+    }
+
     render() {
+        if (!this.props.store.getState().user) {
+            return `
+        <div>
+            <div class="outer">
+                User isn't authorized!
+            </div>
+        </div>
+        `;
+        }
         return `
         <div>
             <div class="outer">
@@ -45,3 +70,5 @@ export class ChangePass extends Block {
         `;
     }
 }
+
+export default withRouter(withStore(ChangePass));

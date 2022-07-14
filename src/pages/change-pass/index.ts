@@ -1,1 +1,1 @@
-export { ChangePass as default } from './change-pass';
+export { default as ChangePass } from './change-pass';

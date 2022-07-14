@@ -5,9 +5,28 @@ import arrowRight from '../../images/arrow_right.svg';
 import menu from '../../images/menu.svg';
 
 import './chat.css';
+import { withRouter } from '../../utils/withRouter';
+import { withStore } from '../../utils/withStore';
 
-export class ChatPage extends Block {
+class ChatPage extends Block {
+    componentDidMount() {
+        if (!this.props.store.getState().user) {
+            // this.props.router.go('/');
+        }
+    }
+
     render() {
+        console.log(this.props)
+        if (this.props.store.getState().pageLoading) {
+            return `
+        <div>
+            <div class="outer">
+                User isn't authorized!
+            </div>
+        </div>
+        `;
+        }
+
         return `
         <div class="main">
             <div class="block__chats">
@@ -50,3 +69,5 @@ export class ChatPage extends Block {
         `;
     }
 }
+
+export default withRouter(withStore(ChatPage));

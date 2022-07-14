@@ -7,8 +7,20 @@ declare global {
         appIsInited: boolean;
         screen: Screens | null;
         isLoading: boolean;
+        pageLoading: boolean,
         loginFormError: string | null;
         user: User | null;
+    };
+
+    export type User = {
+        id: number;
+        login: string;
+        firstName: string;
+        secondName: string;
+        displayName: string;
+        avatar: string;
+        phone: string;
+        email: string;
     };
 }
 

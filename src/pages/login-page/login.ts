@@ -2,33 +2,44 @@ import Block from '../../core/Block';
 
 import '../../css/login-page.css';
 import { validateValue, Validator } from '../../helpers/validator';
+import { login } from '../../services/auth';
+import { withStore } from '../../utils';
 
-export class LoginPage extends Block {
-    constructor() {
+class LoginPage extends Block {
+    constructor(props: any) {
         super({
+            ...props,
             onLogin: () => {
                 const loginInput: HTMLInputElement = this.element?.querySelector('input[name="login"]')!;
                 const passwordInput: HTMLInputElement = this.element?.querySelector('input[name="password"]')!;
                 const result: { [key: string | Validator]: string } = {
-                    [loginInput.name]: loginInput.value,
-                    [passwordInput.name]: passwordInput.value,
+                    login: loginInput.value,
+                    password: passwordInput.value,
                 };
+                let isError = false;
 
                 const loginValidate: string = validateValue(loginInput.name, loginInput.value);
                 const passwordValidate: string = validateValue(passwordInput.name, passwordInput.value);
 
                 if (loginValidate !== '') {
+                    isError = true;
                     this.refs.login.refs.error.setProps({ error: loginValidate });
                 }
                 if (passwordValidate !== '') {
+                    isError = true;
                     this.refs.password.refs.error.setProps({ error: passwordValidate });
                 }
                 console.log(result);// eslint-disable-line no-console
+                if (!isError) {
+                    this.props.store.dispatch(login, result);
+                }
             },
         });
     }
 
     render() {
+        const loginError = this.props.store.getState().loginFormError;
+        const loading = this.props.store.getState().isLoading;
         return `
         <div class="block__outer">
             <div class="block__enter">
@@ -51,8 +62,11 @@ export class LoginPage extends Block {
                         validation="${Validator.password}" 
                     }}}
                 </div>
+                <div class="error-block">
+                    ${loginError || ''}
+                </div>
                 <div>
-                    {{{Button text="Enter" onClick=onLogin}}}
+                    ${loading ? '<div class="lds-dual-ring"></div>' : '{{{Button text="Enter" onClick=onLogin}}}'}
                 </div>
                 <div class="block__link">
                     <a href="${document.location.origin}/registration">Create account</a>
@@ -63,3 +77,5 @@ export class LoginPage extends Block {
         `;
     }
 }
+
+export default withStore(LoginPage);
