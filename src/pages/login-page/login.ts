@@ -38,8 +38,11 @@ class LoginPage extends Block {
     }
 
     render() {
-        const loginError = this.props.store.getState().loginFormError;
-        const loading = this.props.store.getState().isLoading;
+        const { pageLoading, loginFormError, isLoading } = this.props.store.getState();
+
+        if (pageLoading) {
+            return '{{{PageLoader}}}';
+        }
         return `
         <div class="block__outer">
             <div class="block__enter">
@@ -63,10 +66,10 @@ class LoginPage extends Block {
                     }}}
                 </div>
                 <div class="error-block">
-                    ${loginError || ''}
+                    ${loginFormError || ''}
                 </div>
                 <div>
-                    ${loading ? '<div class="lds-dual-ring"></div>' : '{{{Button text="Enter" onClick=onLogin}}}'}
+                    ${isLoading ? '{{{Loader}}}' : '{{{Button text="Enter" onClick=onLogin}}}'}
                 </div>
                 <div class="block__link">
                     <a href="${document.location.origin}/registration">Create account</a>

@@ -39,7 +39,11 @@ export const login = async (
 export const logout = async (dispatch: Dispatch<AppState>) => {
     dispatch({ isLoading: true });
 
-    await authAPI.logout();
+    const response = await authAPI.logout();
+    if (apiHasError(response)) {
+        dispatch({ isLoading: false });
+        return;
+    }
 
     dispatch({ isLoading: false, user: null });
 

@@ -16,8 +16,14 @@ class ChatPage extends Block {
     }
 
     render() {
-        console.log(this.props)
-        if (this.props.store.getState().pageLoading) {
+        console.log(this.props);
+        const { user, pageLoading } = this.props.store.getState();
+
+        if (pageLoading) {
+            return '{{{PageLoader}}}';
+        }
+
+        if (!user) {
             return `
         <div>
             <div class="outer">

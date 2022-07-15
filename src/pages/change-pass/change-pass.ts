@@ -5,6 +5,8 @@ import '../../css/pa.css';
 import { withStore } from '../../utils/withStore';
 import { withRouter } from '../../utils/withRouter';
 import { Router, Store } from '../../core';
+import { changePass } from '../../services/user';
+import { validateValue } from '../../helpers/validator';
 
 type ChangePassProps = {
     router: Router,
@@ -23,22 +25,28 @@ class ChangePass extends Block<ChangePassProps> {
                     const { name, value } = input;
                     result[name] = value;
                 });
+
+                const errorNewPass: string = validateValue('password', result.newPassword);
+                if (errorNewPass !== '') {
+                    this.props.store.dispatch({ loginFormError: `New ${errorNewPass}` });
+                } else {
+                    this.props.store.dispatch(changePass, result);
+                }
+
                 console.log(result);// eslint-disable-line
-                // eslint-disable-next-line
-                console.log('Про валидацию на этой странице в задании не упоминается. '
-                + 'Да и нет правил для валидации этих полей. На всех остальных страницах валидация присутствует.');
             },
         });
     }
 
-    componentDidMount() {
-        if (!this.props.store.getState().user) {
-            this.props.router.go('/');
-        }
-    }
-
     render() {
-        if (!this.props.store.getState().user) {
+        const {
+            user, pageLoading, loginFormError, isLoading,
+        } = this.props.store.getState();
+
+        if (pageLoading) {
+            return '{{{PageLoader}}}';
+        }
+        if (!user) {
             return `
         <div>
             <div class="outer">
@@ -47,6 +55,7 @@ class ChangePass extends Block<ChangePassProps> {
         </div>
         `;
         }
+
         return `
         <div>
             <div class="outer">
@@ -61,9 +70,12 @@ class ChangePass extends Block<ChangePassProps> {
     paData.pass.map(({ label, inputType, inputName }: Record<string, string>) => `{{{ProfileElement label="${label}" inputType="${inputType}" inputName="${inputName}" }}}`).join('')
 }
 
+                <div class="error-block">
+                    ${loginFormError || ''}
+                </div>
                 <div class="saveBlock">
-                    {{{Button text="Save" onClick=onClick}}}
-                </div> 
+                    ${isLoading ? '{{{Loader}}}' : '{{{Button text="Save" onClick=onClick}}}'}
+                </div>
             </div>
             {{{Back}}}
         </div>

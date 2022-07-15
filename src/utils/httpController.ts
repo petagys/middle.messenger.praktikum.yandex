@@ -23,12 +23,6 @@ export interface UpperOptions {
     headers?: Record<string, string>
 }
 
-interface LowerOptions {
-    data?: Record<string | number, unknown> | any,
-    headers?: Record<string, string>,
-    method: Methods
-}
-
 class HTTPTransport {
     get = (url: string, data: Record<string, unknown> = {}) => {
         let getUrl:string = url;
@@ -40,8 +34,9 @@ class HTTPTransport {
 
     put = (
         url:string,
-        data: Record<string, unknown> = {},
-    ) => this._request(url, Methods.PUT, data);
+        data: Record<string, unknown> | FormData,
+        options: Record<string, Record<string, string>> = {},
+    ) => this._request(url, Methods.PUT, data, options);
 
     post = (
         url: string,
@@ -58,13 +53,26 @@ class HTTPTransport {
     // options:
     // headers — obj
     // data — obj
-    protected _request = (url: string, method: Methods, data: Record<string, unknown>, timeout:number = 50000) => {
+    _request = (
+        url: string,
+        method: Methods,
+        data: Record<string, unknown> | FormData,
+        options:Record<string, Record<string, string>> = {},
+        timeout:number = 50000,
+    ) => {
+        const { headers } = options;
         return new Promise((resolve, reject) => {
             const xhr:XMLHttpRequest = new XMLHttpRequest();
             xhr.withCredentials = true;
             xhr.open(method, `${process.env.API_ENDPOINT}/${url}`);
 
-            xhr.setRequestHeader('Content-Type', 'application/json');
+            // if (headers) {
+            //     Object.keys(headers).forEach(key => {
+            //         xhr.setRequestHeader(key, headers[key]);
+            //     });
+            // } else {
+            //     xhr.setRequestHeader('Content-Type', 'application/json');
+            // }
 
             xhr.onloadend = function () {
                 if (xhr.response === 'OK') {
