@@ -7,7 +7,8 @@ declare global {
         appIsInited: boolean;
         screen: Screens | null;
         isLoading: boolean;
-        pageLoading: boolean,
+        pageLoading: boolean;
+        isLoadingChats: boolean;
         loginFormError: string | null;
         user: User | null;
     };
@@ -22,6 +23,17 @@ declare global {
         phone: string;
         email: string;
     };
+
+    export type Chat = {
+        id: number,
+        title: string,
+        avatar: string,
+        unread_count: number,
+        last_message: {
+            user: User,
+            time: string,
+            content: string
+        }
 }
 
 declare module '*.json' {

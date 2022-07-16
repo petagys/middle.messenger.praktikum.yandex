@@ -66,13 +66,12 @@ class HTTPTransport {
             xhr.withCredentials = true;
             xhr.open(method, `${process.env.API_ENDPOINT}/${url}`);
 
-            // if (headers) {
-            //     Object.keys(headers).forEach(key => {
-            //         xhr.setRequestHeader(key, headers[key]);
-            //     });
-            // } else {
-            //     xhr.setRequestHeader('Content-Type', 'application/json');
-            // }
+            if (headers) {
+                Object.keys(headers).forEach(key => {
+                    xhr.setRequestHeader(key, headers[key]);
+                });
+            }
+            xhr.setRequestHeader('Content-Type', 'application/json');
 
             xhr.onloadend = function () {
                 if (xhr.response === 'OK') {

@@ -23,15 +23,9 @@ class Avatar extends Block {
             events: {
                 change: (e:Event) => {
                     e.preventDefault();
-                    console.log(e.target!.files[0])
                     const formData = new FormData();
                     formData.append('avatar', e.target!.files[0]);
-                    console.log(formData);
-                    // let xhr = new XMLHttpRequest;
-                    // xhr.open('PUT', '/');
-                    // xhr.send(formData);
-                    httpController._request('/', 'PUT', formData);
-                    // this.props.store.dispatch(changeAvatar, formData);
+                    this.props.store.dispatch(changeAvatar, formData);
                 },
             },
         });

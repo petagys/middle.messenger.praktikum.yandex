@@ -7,12 +7,18 @@ import menu from '../../images/menu.svg';
 import './chat.css';
 import { withRouter } from '../../utils/withRouter';
 import { withStore } from '../../utils/withStore';
+import { getChats } from '../../services/chats';
+import { Store } from '../../core';
+
+type ChatProps = {
+    store: Store<AppState>
+}
 
 class ChatPage extends Block {
-    componentDidMount() {
-        if (!this.props.store.getState().user) {
-            // this.props.router.go('/');
-        }
+    constructor(props: ChatProps) {
+        super(props);
+
+        this.props.store.dispatch(getChats);
     }
 
     render() {

@@ -40,11 +40,26 @@ export const changeAvatar = async (
     action: FormData,
 ) => {
     dispatch({ isLoading: true, loginFormError: '' });
-    const response: any = await userAPI.avatar(action);
+    const xhr = new XMLHttpRequest();// Почему то реализованный класс HTTPController корректно не отрабатывает :(
+    xhr.open('PUT', `${process.env.API_ENDPOINT}/user/profile/avatar`);// Всегда пустой formData...
+    xhr.withCredentials = true;
+    xhr.send(action);
+    xhr.onloadend = function () {
+        const response = xhr.response === 'OK' ? xhr.response : JSON.parse(xhr.response);
+        if (apiHasError(response)) {
+            dispatch({ isLoading: false, loginFormError: response.reason });
+            return;
+        }
+        dispatch({ isLoading: false, loginFormError: '', user: transformUser(response as UserDTO) });
+    };
 
-    if (apiHasError(response)) {
-        dispatch({ isLoading: false, loginFormError: response.reason });
-        return;
-    }
-    dispatch({ isLoading: false, loginFormError: '', user: transformUser(response as UserDTO) });
+    xhr.onabort = () => {
+        dispatch({ isLoading: false, loginFormError: 'Error!' });
+    };
+    xhr.onerror = () => {
+        dispatch({ isLoading: false, loginFormError: 'Error!' });
+    };
+    xhr.ontimeout = () => {
+        dispatch({ isLoading: false, loginFormError: 'Error!' });
+    };
 };

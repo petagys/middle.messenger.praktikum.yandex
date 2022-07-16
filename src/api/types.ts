@@ -12,3 +12,15 @@ export type UserDTO = {
   phone: string;
   email: string;
 };
+
+export type ChatDTO = {
+  id: number,
+  title: string,
+  avatar: string,
+  unread_count: number,
+  last_message: {
+    user: UserDTO,
+    time: string,
+    content: string
+  }
+};
