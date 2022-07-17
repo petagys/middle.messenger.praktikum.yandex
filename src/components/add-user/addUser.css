@@ -1,0 +1,17 @@
+.add {
+    color: #00A523;
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.del {
+    color: red;
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}

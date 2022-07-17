@@ -63,3 +63,22 @@ export const changeAvatar = async (
         dispatch({ isLoading: false, loginFormError: 'Error!' });
     };
 };
+
+export const searchUser = async (
+    dispatch: Dispatch<AppState>,
+    state: AppState,
+    action: UserDTO,
+) => {
+    dispatch({ isLoading: true, loginFormError: '' });
+    const response: any = await userAPI.search(action);
+
+    if (apiHasError(response)) {
+        dispatch({ isLoading: false, loginFormError: response.reason });
+        return;
+    }
+    dispatch({
+        isLoading: false,
+        loginFormError: '',
+        searchResult: response.map((user: UserDTO) => transformUser(user)),
+    });
+};

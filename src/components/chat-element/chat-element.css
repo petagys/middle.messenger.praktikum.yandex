@@ -41,7 +41,7 @@
     line-height: 12px;
     padding: 4px;
     text-align: center;
-    color: #fff;
+    color: #FFF;
     float: right;
   }
 
@@ -66,10 +66,10 @@
       }
   }
 }
-
+/* 
 .chat__text.ellipsis::after {
     content: "...";
     position: absolute;
     bottom: 1px;
     right: -7px;
-}
+} */

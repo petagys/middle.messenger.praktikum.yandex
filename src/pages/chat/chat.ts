@@ -1,13 +1,10 @@
+/* eslint-disable camelcase */
 import Block from '../../core/Block';
-import chatList from '../../data/chatList.json';
-import attache from '../../images/attache.svg';
-import arrowRight from '../../images/arrow_right.svg';
-import menu from '../../images/menu.svg';
 
 import './chat.css';
 import { withRouter } from '../../utils/withRouter';
 import { withStore } from '../../utils/withStore';
-import { getChats } from '../../services/chats';
+import { addChat, getChats } from '../../services/chats';
 import { Store } from '../../core';
 
 type ChatProps = {
@@ -18,12 +15,25 @@ class ChatPage extends Block {
     constructor(props: ChatProps) {
         super(props);
 
+        this.setProps({
+            addChat: () => {
+                // eslint-disable-next-line no-alert
+                const newName: string = prompt('Enter name of new chat:', '') || '';
+                if (newName) {
+                    this.props.store.dispatch(addChat, { title: newName });
+                }
+            },
+        });
+    }
+
+    componentDidMount(props: any): void {
         this.props.store.dispatch(getChats);
     }
 
     render() {
-        console.log(this.props);
-        const { user, pageLoading } = this.props.store.getState();
+        const {
+            user, pageLoading, chats, isLoadingChats,
+        } = this.props.store.getState();
 
         if (pageLoading) {
             return '{{{PageLoader}}}';
@@ -46,37 +56,27 @@ class ChatPage extends Block {
                     <div class="block__link-profile">
                         <a href="${document.location.origin}/pa" class="greyLink">Profile ></a>
                     </div>
+                    <div class="addBlock">
+                        {{{Button text="Add chat" onClick=addChat}}}
+                    </div>
                     <div class="block__search">
                         <input class="searchInput" placeholder="Search..." name="search" type="text" />
                     </div>
                     <div class="block__list">
-                        ${chatList.map(({
-        title, text, notifications, dateText, // eslint-disable-next-line
-    }: Record<string, string | number>) => `{{{ChatElement title="${title}" text="${text}" notifications="${notifications}" dateText="${dateText}"}}}`).join('')}
+                        ${isLoadingChats ? 'loading' : chats.map(({
+        title, last_message, unread_count, dateText = '', id, // eslint-disable-next-line
+                        }: Record<string, string | number>) => `
+                        {{{ChatElement title="${title}"
+                                       id=${id}
+                                       text="${last_message || 'No messages yet'}"
+                                       notifications=${unread_count}
+                                       dateText="${dateText}"}}}`).join('')
+}
                     </div>
                 </div>
             </div>
-            <div class="block__personalChat">
-                <div class="flexBlock chatHeader">
-                    <div class="flexBlock">
-                        <div class="chat__avatar"></div>
-                        <span class="chat__name">Дмитрий Виноградов</span>
-                    </div>
-                    <img class="icon" src="${menu}" alt="menu" />
-                </div>
-                <div class="chatArea">
-
-                </div>
-                <div class="flexBlock chatFooter">
-                    <img class="icon__attachment" src="${attache}" alt="attache" />
-                    <input
-                        class="messageField"
-                        type="text"
-                        name="message"
-                        placeholder="Message" />
-                    <img class="icon__send" src="${arrowRight}" alt="send" />
-                </div>
-            </div>
+            {{{ActiveChat}}}
+            {{{Modal}}}
         </div>
         `;
     }

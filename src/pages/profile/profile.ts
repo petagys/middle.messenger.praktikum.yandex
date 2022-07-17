@@ -7,11 +7,13 @@ import { withStore } from '../../utils/withStore';
 import { Router, Store } from '../../core';
 import { withRouter } from '../../utils/withRouter';
 import { changeProfile } from '../../services/user';
+import { logout } from '../../services/auth';
 
 type ProfileProps = {
     router: Router,
     store: Store<AppState>,
-    onClick?: () => void
+    onClick?: () => void,
+    logout?: () => void
 }
 
 class Profile extends Block<ProfileProps> {
@@ -40,11 +42,11 @@ class Profile extends Block<ProfileProps> {
                 }
                 console.log(result);// eslint-disable-line no-console
             },
+            logout: () => this.props.store.dispatch(logout),
         });
     }
 
     render() {
-        console.log(this.props.store.getState());
         const {
             user, pageLoading, loginFormError, isLoading,
         } = this.props.store.getState();
@@ -90,8 +92,8 @@ class Profile extends Block<ProfileProps> {
                 <div class="infoBlock left">
                     <a href="${document.location.origin}/change-pass">Change password</a>
                 </div>
-                <div class="infoBlock left">
-                    {{{Logout}}}
+                <div class="infoBlock left exit">
+                    {{{Logout text="Logout" onClick=logout}}}
                 </div>
             </div>
             {{{Back}}}

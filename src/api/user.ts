@@ -7,6 +7,9 @@ export const userAPI = {
     profile: (data: Record<string, unknown>) => {
         return httpController.put('user/profile', data);
     },
+    search: (data: Record<string, unknown>) => {
+        return httpController.post('user/search', data);
+    },
     // avatar: (data: FormData) => {
     //     return httpController.put('user/profile/avatar', data, {
     //         headers: {

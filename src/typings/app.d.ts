@@ -1,3 +1,5 @@
+import { type } from 'os';
+
 declare global {
     export type Nullable<T> = T | null;
 
@@ -8,9 +10,21 @@ declare global {
         screen: Screens | null;
         isLoading: boolean;
         pageLoading: boolean;
-        isLoadingChats: boolean;
         loginFormError: string | null;
         user: User | null;
+        chats: Array<Chat>;
+        isLoadingChats: boolean;
+        loadChat: boolean;
+        openModal: boolean;
+        activeChat: ActiveChat;
+        searchResult: Array<User>
+    };
+
+    export type ActiveChat = {
+        token: string;
+        users: Array<User>;
+        title: string;
+        id: number|null;
     };
 
     export type User = {
@@ -29,11 +43,12 @@ declare global {
         title: string,
         avatar: string,
         unread_count: number,
-        last_message: {
+        last_message: null | {
             user: User,
             time: string,
             content: string
         }
+    };
 }
 
 declare module '*.json' {

@@ -1,15 +1,24 @@
 import Block from '../../core/Block';
+import { getChatInfo } from '../../services/chats';
+import { withRouter, withStore } from '../../utils';
 import './chat-element.css';
 
-interface ChatElementProps {
-    text: string,
-    title: string,
-    dateText: string,
-    notifications: number,
-}
-
-export class ChatElement extends Block {
+class ChatElement extends Block {
     static componentName = 'ChatElement';
+
+    constructor(props: any) {
+        super({
+            ...props,
+            events: {
+                click: () => {
+                    this.props.store.dispatch(getChatInfo, {
+                        id: this.props.id,
+                        title: this.props.title,
+                    });
+                },
+            },
+        });
+    }
 
     render(): string {
         return `
@@ -25,9 +34,11 @@ export class ChatElement extends Block {
                 </div>
                 <div class="chat__info">
                     <div class="chat__timedate">{{dateText}}</div>
-                    <div class="chat__notification">{{notifications}}</div>
+                    {{#if notifications}}<div class="chat__notification">{{notifications}}</div>{{/if}}
                 </div>
             </div>
         `;
     }
 }
+
+export default withRouter(withStore(ChatElement));

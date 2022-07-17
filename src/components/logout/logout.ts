@@ -1,6 +1,5 @@
 import { Router, Store } from '../../core';
 import Block from '../../core/Block';
-import { logout } from '../../services/auth';
 import { withStore } from '../../utils';
 import { withRouter } from '../../utils/withRouter';
 
@@ -8,6 +7,7 @@ import './logout.css';
 
 interface LogoutProps {
     router: Router,
+    text: string,
     store: Store<AppState>,
     onClick: () => void
 }
@@ -15,21 +15,22 @@ interface LogoutProps {
 class Logout extends Block {
     static componentName = 'Logout';
 
-    constructor({ router, store }: LogoutProps) {
+    constructor({
+        text, router, store, onClick,
+    }: LogoutProps) {
         super({
+            text,
             router,
             store,
             events: {
-                click: () => {
-                    store.dispatch(logout);
-                },
+                click: onClick,
             },
         });
     }
 
     render(): string {
         return `
-            <span class="exit">Log out</span>
+            <span>${this.props.text}</span>
         `;
     }
 }
