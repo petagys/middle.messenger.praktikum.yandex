@@ -51,12 +51,13 @@ export default class Route<P = any> {
 
     render() {
         const { id } = this.#prefixHandler();
+        console.log(this.#block)
         if (!this.#block) {
             this.#block = new this.#blockClass({ ...this.#props, idPath: id });
             renderDOM(this.#block);
             return;
         }
-
+        console.log('2222')
         this.#block.setProps({ idPath: id });
         this.#block.show();
     }

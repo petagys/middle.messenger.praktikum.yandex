@@ -1,23 +1,34 @@
 /* eslint-disable camelcase */
-import { Block } from '../../core';
+import { Block, Store } from '../../core';
 import { withRouter, withStore } from '../../utils';
 import './activeChat.css';
 
 import attache from '../../images/attache.svg';
-import arrowRight from '../../images/arrow_right.svg';
+import { sendMessage } from '../../services/chats';
 
+interface acProps {
+    openModal: () => {},
+    openClick: () => {},
+    store: Store<AppState>
+}
 class ActiveChat extends Block {
     static componentName = 'ActiveChat';
 
-    constructor(props) {
+    constructor(props: acProps) {
         super(props);
         this.setProps({
             openModal: () => this.props.store.dispatch({ openModal: true }),
+            onClick: () => {
+                const message: HTMLInputElement = this.element?.querySelector('input[name="message"]')!;
+                if (message.value !== '') {
+                    this.props.store.dispatch(sendMessage, message.value);
+                }
+            },
         });
     }
 
     render() {
-        const { activeChat: { title }, loadChat } = this.props.store.getState();
+        const { activeChat: { title, messages }, loadChat } = this.props.store.getState();
 
         if (loadChat) {
             return `<div class="loadOut">
@@ -37,16 +48,18 @@ class ActiveChat extends Block {
                 </div>
             </div>
             <div class="chatArea">
-
+                ${messages.map((mes: Message) => `
+                    <div class="messageLine">
+                        <div class="message">
+                            ${mes.content}
+                        </div>
+                    </div>
+                `).join('')}
             </div>
             <div class="flexBlock chatFooter">
-                <img class="icon__attachment" src="${attache}" alt="attache" />
-                <input
-                    class="messageField"
-                    type="text"
-                    name="message"
-                    placeholder="Message" />
-                <img class="icon__send" src="${arrowRight}" alt="send" />
+                ${title ? `<img class="icon__attachment" src="${attache}" alt="attache" />
+                {{{MessageInput onChange=onChange}}}
+                {{{Send onClick=onClick}}}` : ''}
             </div>
         </div>
         `;

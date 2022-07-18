@@ -25,6 +25,7 @@ declare global {
         users: Array<User>;
         title: string;
         id: number|null;
+        messages: Array<Message>
     };
 
     export type User = {
@@ -39,16 +40,24 @@ declare global {
     };
 
     export type Chat = {
-        id: number,
-        title: string,
-        avatar: string,
-        unread_count: number,
-        last_message: null | {
-            user: User,
-            time: string,
-            content: string
-        }
+        id: number;
+        title: string;
+        avatar: string;
+        unread_count: number;
+        last_message: null | Message;
     };
+
+    export type Message = {
+        id: number;
+        time: string;
+        content: string;
+        user_id?: number;
+        chat_id?: number;
+        type?: string;
+        user?: User;
+        is_read?: boolean;
+        file?: null;
+    }
 }
 
 declare module '*.json' {

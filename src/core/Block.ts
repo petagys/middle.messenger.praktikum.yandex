@@ -14,6 +14,7 @@ export default class Block<P = any> {
         INIT: 'init',
         FLOW_CDM: 'flow:component-did-mount',
         FLOW_CDU: 'flow:component-did-update',
+        FLOW_CWU: 'flow:component-will-unmount',
         FLOW_RENDER: 'flow:render',
     } as const;
 
@@ -29,7 +30,7 @@ export default class Block<P = any> {
 
     protected state: any = {};
 
-    refs: { [key: string]: Block } = {};
+    protected refs: { [key: string]: HTMLElement } = {};
 
     public static componentName?: string;
 
@@ -38,7 +39,7 @@ export default class Block<P = any> {
 
         this.getStateFromProps(props);
 
-        this.props = this._makePropsProxy(props || {} as P);
+        this.props = this._makePropsProxy(props || ({} as P));
         this.state = this._makePropsProxy(this.state);
 
         this.eventBus = () => eventBus;
@@ -48,14 +49,30 @@ export default class Block<P = any> {
         eventBus.emit(Block.EVENTS.INIT, this.props);
     }
 
-    private _registerEvents(eventBus: EventBus<Events>) {
+    /**
+     * Хелпер, который проверяет, находится ли элемент в DOM дереве
+     * И есть нет, триггерит событие COMPONENT_WILL_UNMOUNT
+     */
+    _checkInDom() {
+        const elementInDOM = document.body.contains(this._element);
+
+        if (elementInDOM) {
+            setTimeout(() => this._checkInDom(), 1000);
+            return;
+        }
+
+        this.eventBus().emit(Block.EVENTS.FLOW_CWU, this.props);
+    }
+
+    _registerEvents(eventBus: EventBus<Events>) {
         eventBus.on(Block.EVENTS.INIT, this.init.bind(this));
         eventBus.on(Block.EVENTS.FLOW_CDM, this._componentDidMount.bind(this));
         eventBus.on(Block.EVENTS.FLOW_CDU, this._componentDidUpdate.bind(this));
+        eventBus.on(Block.EVENTS.FLOW_CWU, this._componentWillUnmount.bind(this));
         eventBus.on(Block.EVENTS.FLOW_RENDER, this._render.bind(this));
     }
 
-    private _createResources() {
+    _createResources() {
         this._element = this._createDocumentElement('div');
     }
 
@@ -68,14 +85,22 @@ export default class Block<P = any> {
         this.eventBus().emit(Block.EVENTS.FLOW_RENDER, this.props);
     }
 
-    private _componentDidMount(props: P) {
+    _componentDidMount(props: P) {
+        this._checkInDom();
+
         this.componentDidMount(props);
     }
 
-    componentDidMount(props: P) {
+    componentDidMount(props: P) { }
+
+    _componentWillUnmount() {
+        this.eventBus().destroy();
+        this.componentWillUnmount();
     }
 
-    private _componentDidUpdate(oldProps: P, newProps: P) {
+    componentWillUnmount() { }
+
+    _componentDidUpdate(oldProps: P, newProps: P) {
         const response = this.componentDidUpdate(oldProps, newProps);
         if (!response) {
             return;
@@ -87,7 +112,7 @@ export default class Block<P = any> {
         return true;
     }
 
-    setProps = (nextProps: P) => {
+    setProps = (nextProps: Partial<P>) => {
         if (!nextProps) {
             return;
         }
@@ -107,16 +132,16 @@ export default class Block<P = any> {
         return this._element;
     }
 
-    private _render() {
+    _render() {
         const fragment = this._compile();
 
         this._removeEvents();
         const newElement = fragment.firstElementChild!;
 
-    this._element!.replaceWith(newElement);
+        this._element!.replaceWith(newElement);
 
-    this._element = newElement as HTMLElement;
-    this._addEvents();
+        this._element = newElement as HTMLElement;
+        this._addEvents();
     }
 
     protected render(): string {
@@ -124,10 +149,12 @@ export default class Block<P = any> {
     }
 
     getContent(): HTMLElement {
-    // Хак, чтобы вызвать CDM только после добавления в DOM
+        // Хак, чтобы вызвать CDM только после добавления в DOM
         if (this.element?.parentNode?.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
             setTimeout(() => {
-                if (this.element?.parentNode?.nodeType !== Node.DOCUMENT_FRAGMENT_NODE) {
+                if (
+                    this.element?.parentNode?.nodeType !== Node.DOCUMENT_FRAGMENT_NODE
+                ) {
                     this.eventBus().emit(Block.EVENTS.FLOW_CDM);
                 }
             }, 100);
@@ -136,29 +163,35 @@ export default class Block<P = any> {
         return this.element!;
     }
 
-    private _makePropsProxy = (props: any): any => new Proxy(props as unknown as object, {
-        get(target: Record<string, unknown>, prop: string) {
-            const value = target[prop];
-            return typeof value === 'function' ? value.bind(target) : value;
-        },
-        set: (target: Record<string, unknown>, prop: string, value: unknown) => {
-            target[prop] = value;
+    _makePropsProxy(props: any): any {
+        // Можно и так передать this
+        // Такой способ больше не применяется с приходом ES6+
+        const self = this;
 
-            // Запускаем обновление компоненты
-            // Плохой cloneDeep, в след итерации нужно заставлять добавлять cloneDeep им самим
-            this.eventBus().emit(Block.EVENTS.FLOW_CDU, { ...target, prop }, target);
-            return true;
-        },
-        deleteProperty() {
-            throw new Error('Нет доступа');
-        },
-    }) as unknown as P;
+        return new Proxy(props as unknown as object, {
+            get(target: Record<string, unknown>, prop: string) {
+                const value = target[prop];
+                return typeof value === 'function' ? value.bind(target) : value;
+            },
+            set(target: Record<string, unknown>, prop: string, value: unknown) {
+                target[prop] = value;
 
-    private _createDocumentElement(tagName: string) {
+                // Запускаем обновление компоненты
+                // Плохой cloneDeep, в след итерации нужно заставлять добавлять cloneDeep им самим
+                self.eventBus().emit(Block.EVENTS.FLOW_CDU, { ...target }, target);
+                return true;
+            },
+            deleteProperty() {
+                throw new Error('Нет доступа');
+            },
+        }) as unknown as P;
+    }
+
+    _createDocumentElement(tagName: string) {
         return document.createElement(tagName);
     }
 
-    private _removeEvents() {
+    _removeEvents() {
         const { events } = this.props as any;
 
         if (!events || !this._element) {
@@ -166,11 +199,11 @@ export default class Block<P = any> {
         }
 
         Object.entries(events).forEach(([event, listener]) => {
-      this._element!.removeEventListener(event, listener);
+            this._element!.removeEventListener(event, listener);
         });
     }
 
-    private _addEvents() {
+    _addEvents() {
         const { events } = this.props as any;
 
         if (!events) {
@@ -178,28 +211,31 @@ export default class Block<P = any> {
         }
 
         Object.entries(events).forEach(([event, listener]) => {
-      this._element!.addEventListener(event, listener);
+            this._element!.addEventListener(event, listener);
         });
     }
 
-    private _compile(): DocumentFragment {
+    _compile(): DocumentFragment {
         const fragment = document.createElement('template');
 
         /**
-     * Рендерим шаблон
-     */
+         * Рендерим шаблон
+         */
         const template = Handlebars.compile(this.render());
         fragment.innerHTML = template({
-            ...this.state, ...this.props, children: this.children, refs: this.refs,
+            ...this.state,
+            ...this.props,
+            children: this.children,
+            refs: this.refs,
         });
 
         /**
-     * Заменяем заглушки на компоненты
-     */
+         * Заменяем заглушки на компоненты
+         */
         Object.entries(this.children).forEach(([id, component]) => {
             /**
-       * Ищем заглушку по id
-       */
+             * Ищем заглушку по id
+             */
             const stub = fragment.content.querySelector(`[data-id="${id}"]`);
 
             if (!stub) {
@@ -209,14 +245,14 @@ export default class Block<P = any> {
             const stubChilds = stub.childNodes.length ? stub.childNodes : [];
 
             /**
-       * Заменяем заглушку на component._element
-       */
+             * Заменяем заглушку на component._element
+             */
             const content = component.getContent();
             stub.replaceWith(content);
 
             /**
-       * Ищем элемент layout-а, куда вставлять детей
-       */
+             * Ищем элемент layout-а, куда вставлять детей
+             */
             const layoutContent = content.querySelector('[data-layout="1"]');
 
             if (layoutContent && stubChilds.length) {
@@ -225,8 +261,8 @@ export default class Block<P = any> {
         });
 
         /**
-     * Возвращаем фрагмент
-     */
+         * Возвращаем фрагмент
+         */
         return fragment.content;
     }
 

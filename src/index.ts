@@ -1,5 +1,5 @@
 import {
-    registerComponent, Store, Router,
+    registerComponent, Store, Router, renderDOM,
 } from './core';
 import './app.css';
 
@@ -32,6 +32,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 'background: #222; color: #bada55',
                 nextState,
             );
+        }
+        if (prevState.screen !== nextState.screen) {
+            const Page = getScreenComponent(nextState.screen);
+            renderDOM(new Page({}));
         }
     });
     /**

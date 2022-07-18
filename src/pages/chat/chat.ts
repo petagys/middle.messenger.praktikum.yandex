@@ -54,7 +54,7 @@ class ChatPage extends Block {
             <div class="block__chats">
                 <div class="searchProfileBlock">
                     <div class="block__link-profile">
-                        <a href="${document.location.origin}/pa" class="greyLink">Profile ></a>
+                        {{{Link text="Profile >" link="/pa"}}}
                     </div>
                     <div class="addBlock">
                         {{{Button text="Add chat" onClick=addChat}}}
@@ -68,7 +68,7 @@ class ChatPage extends Block {
                         }: Record<string, string | number>) => `
                         {{{ChatElement title="${title}"
                                        id=${id}
-                                       text="${last_message || 'No messages yet'}"
+                                       text="${last_message ? last_message.content : 'No messages yet'}"
                                        notifications=${unread_count}
                                        dateText="${dateText}"}}}`).join('')
 }

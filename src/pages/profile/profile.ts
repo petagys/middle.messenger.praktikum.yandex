@@ -67,7 +67,9 @@ class Profile extends Block<ProfileProps> {
         return `
         <div>
             <div class="outer">
-                <div class="circle" style="background-image: url(${process.env.API_ENDPOINT}/resources/${user.avatar})">
+                <div class="circle"
+                ${user.avatar
+        ? `style="background-image: url(${process.env.API_ENDPOINT}/resources/${user.avatar})"` : ''}>
                     <div class="circle__text">
                         <label for="avatar">Change avatar</label>
                         {{{Avatar}}}
@@ -90,7 +92,7 @@ class Profile extends Block<ProfileProps> {
                     ${isLoading ? '{{{Loader}}}' : '{{{Button text="Change profile data" onClick=onClick}}}'}
                 </div>
                 <div class="infoBlock left">
-                    <a href="${document.location.origin}/change-pass">Change password</a>
+                    {{{Link text="Change password" link="/change-pass"}}}
                 </div>
                 <div class="infoBlock left exit">
                     {{{Logout text="Logout" onClick=logout}}}

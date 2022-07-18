@@ -72,7 +72,7 @@ class LoginPage extends Block {
                     ${isLoading ? '{{{Loader}}}' : '{{{Button text="Enter" onClick=onLogin}}}'}
                 </div>
                 <div class="block__link">
-                    <a href="${document.location.origin}/registration">Create account</a>
+                    {{{Link text="Create account" link="/registration"}}}
                 </div>
                 </div>
             </div>

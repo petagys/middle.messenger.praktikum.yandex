@@ -1,8 +1,8 @@
-import { BlockConstructable, Store } from '../core';
+import { BlockClass, Store } from '../core';
 
 type WithStateProps = { store: Store<AppState> };
 
-export function withStore<P extends WithStateProps>(WrappedBlock: BlockConstructable<P>) {
+export function withStore<P extends WithStateProps>(WrappedBlock: BlockClass<P>) {
     // @ts-expect-error No base constructor has the specified
     return class extends WrappedBlock<P> {
         public static componentName = WrappedBlock.componentName || WrappedBlock.name;
@@ -30,5 +30,5 @@ export function withStore<P extends WithStateProps>(WrappedBlock: BlockConstruct
             super.componentWillUnmount();
             window.store.off('changed', this.__onChangeStoreCallback);
         }
-    } as BlockConstructable<Omit<P, 'store'>>;
+    } as BlockClass<Omit<P, 'store'>>;
 }

@@ -2,6 +2,7 @@ import { Dispatch } from '../core';
 import { apiHasError, transformUser } from '../utils';
 import { chatsAPI } from '../api/chats';
 import { ChatDTO, UserDTO } from '../api/types';
+import { mySocket } from '../utils/MyWebSocket';
 
 export const getChats = async (
     dispatch: Dispatch<AppState>,
@@ -42,16 +43,19 @@ export const getChatInfo = async (
         loadChat: true,
         activeChat: {
             title: action.title,
-            token: '',
-            users: [],
             id: action.id,
+            messages: [],
+            users: [],
+            token: '',
         },
     });
+
     const response: any = await chatsAPI.getToken(action.id);
 
     if (apiHasError(response)) {
         // eslint-disable-next-line no-alert
         alert(response.reason);
+        dispatch({ loadChat: true });
         return;
     }
 
@@ -60,27 +64,33 @@ export const getChatInfo = async (
     if (apiHasError(responseUsers)) {
         // eslint-disable-next-line no-alert
         alert(responseUsers.reason);
+        dispatch({ loadChat: true });
         return;
     }
 
+    const newActiveChat = {
+        title: action.title,
+        id: action.id,
+        messages: [],
+        token: response.token,
+        users: responseUsers.map((user: UserDTO) => transformUser(user)),
+    };
+
     dispatch({
         activeChat: {
-            token: response.token,
-            users: responseUsers.map((user: UserDTO) => transformUser(user)),
-            title: action.title,
-            id: action.id,
+            ...newActiveChat,
         },
         loadChat: false,
     });
 
-    const socket = new WebSocket(`wss://ya-praktikum.tech/ws/chats/${state.user?.id}/${action.id}/${response.token}`);;
+    const socket = mySocket.set(state.user.id, action.id, response.token);
 
     socket.addEventListener('open', () => {
         console.log('Соединение установлено');
 
         socket.send(JSON.stringify({
-            content: 'Моё первое сообщение миру!',
-            type: 'message',
+            content: '0',
+            type: 'get old',
         }));
     });
 
@@ -96,11 +106,36 @@ export const getChatInfo = async (
 
     socket.addEventListener('message', event => {
         console.log('Получены данные', event.data);
+        dispatch({
+            activeChat: {
+                ...newActiveChat,
+                messages: () => {
+                    const newData = JSON.parse(event.data);
+                    if (Array.isArray(newData)) {
+                        return newData;
+                    }
+                    return [...window.store.getState().activeChat.messages, newData];
+                },
+            },
+        });
     });
 
     socket.addEventListener('error', event => {
         console.log('Ошибка', event.message);
     });
+};
+
+export const sendMessage = async (
+    dispatch: Dispatch<AppState>,
+    state: AppState,
+    action: string,
+) => {
+    const socket = mySocket.get();
+
+    socket?.send(JSON.stringify({
+        content: action,
+        type: 'message',
+    }));
 };
 
 export const addUser = async (

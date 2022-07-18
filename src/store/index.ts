@@ -15,5 +15,6 @@ export const defaultState: AppState = {
         token: '',
         users: [],
         id: null,
+        messages: [],
     },
 };

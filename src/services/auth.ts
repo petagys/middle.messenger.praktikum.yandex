@@ -2,7 +2,6 @@ import { authAPI } from '../api/auth';
 import { UserDTO } from '../api/types';
 import type { Dispatch } from '../core';
 import { transformUser, apiHasError } from '../utils';
-import { getChats } from './chats';
 
 type LoginPayload = {
   login: string;

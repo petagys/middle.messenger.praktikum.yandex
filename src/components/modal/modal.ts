@@ -21,7 +21,7 @@ class Modal extends Block {
                 } else {
                     this.refs.searchLogin.refs.error.setProps({ error: 'Cannot be empty!' });
                 }
-            }
+            },
         });
     }
 
