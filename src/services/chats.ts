@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { Dispatch } from '../core';
 import { apiHasError, transformUser } from '../utils';
 import { chatsAPI } from '../api/chats';
@@ -15,10 +16,8 @@ const initSocket = (userId: number, actionId: number, token: string):void => {
 const getMessages = (data: string) => {
     const newData: Array<Message> | Message = JSON.parse(data);
     if (Array.isArray(newData)) {
-        console.log(newData);
         return newData;
     }
-    console.log([...window.store.getState().activeChat.messages, newData]);
     return [newData, ...window.store.getState().activeChat.messages];
 };
 
@@ -101,7 +100,7 @@ export const getChatInfo = async (
         loadChat: false,
     });
 
-    initSocket(state.user.id, action.id, response.token);
+    initSocket(state!.user!.id, action.id, response.token);
     if (socket !== null) {
         socket.addEventListener('open', () => {
             console.log('Соединение установлено');
@@ -152,7 +151,7 @@ export const sendMessage = async (
 export const addUser = async (
     dispatch: Dispatch<AppState>,
     state: AppState,
-    action: Record<string, unknown>,
+    action: Record<string, any>,
 ) => {
     dispatch({ isLoading: true, loginFormError: '' });
     const body = {
@@ -180,7 +179,7 @@ export const addUser = async (
 export const deleteUser = async (
     dispatch: Dispatch<AppState>,
     state: AppState,
-    action: Record<string, unknown>,
+    action: Record<string, any>,
 ) => {
     dispatch({ isLoading: true, loginFormError: '' });
     const body = {

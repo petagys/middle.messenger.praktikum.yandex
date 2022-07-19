@@ -50,7 +50,6 @@ class Profile extends Block<ProfileProps> {
         const {
             user, pageLoading, loginFormError, isLoading,
         } = this.props.store.getState();
-        console.log(user)
 
         if (pageLoading) {
             return '{{{PageLoader}}}';
