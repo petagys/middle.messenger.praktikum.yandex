@@ -1,6 +1,7 @@
 import { authAPI } from '../api/auth';
 import { UserDTO } from '../api/types';
 import type { Dispatch } from '../core';
+import { defaultState } from '../store';
 import { transformUser, apiHasError } from '../utils';
 
 type LoginPayload = {
@@ -45,7 +46,7 @@ export const logout = async (dispatch: Dispatch<AppState>) => {
         return;
     }
 
-    dispatch({ isLoading: false, user: null });
+    dispatch(defaultState);
 
     window.router.go('/');
 };

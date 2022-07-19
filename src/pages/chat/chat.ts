@@ -34,6 +34,7 @@ class ChatPage extends Block {
         const {
             user, pageLoading, chats, isLoadingChats,
         } = this.props.store.getState();
+        console.log(1, user);
 
         if (pageLoading) {
             return '{{{PageLoader}}}';
@@ -43,40 +44,48 @@ class ChatPage extends Block {
             return `
         <div>
             <div class="outer">
-                User isn't authorized!
+                User isn't authorized!!!
             </div>
         </div>
         `;
         }
 
         return `
-        <div class="main">
-            <div class="block__chats">
-                <div class="searchProfileBlock">
-                    <div class="block__link-profile">
-                        {{{Link text="Profile >" link="/pa"}}}
-                    </div>
-                    <div class="addBlock">
-                        {{{Button text="Add chat" onClick=addChat}}}
-                    </div>
-                    <div class="block__search">
-                        <input class="searchInput" placeholder="Search..." name="search" type="text" />
-                    </div>
-                    <div class="block__list">
-                        ${isLoadingChats ? 'loading' : chats.map(({
+        <div>
+            <div class="main">
+                <div class="block__chats">
+                    <div class="searchProfileBlock">
+                        <div class="block__link-profile">
+                            {{{Link text="Profile >" link="/pa"}}}
+                        </div>
+                        <div class="addBlock">
+                            {{{Button text="Add chat" onClick=addChat}}}
+                        </div>
+                        <div class="block__search">
+                            <input class="searchInput" placeholder="Search..." name="search" type="text" />
+                        </div>
+                        <div class="block__list">
+                            ${isLoadingChats ? 'loading' : chats.map(({
         title, last_message, unread_count, dateText = '', id, // eslint-disable-next-line
-                        }: Record<string, string | number>) => `
-                        {{{ChatElement title="${title}"
-                                       id=${id}
-                                       text="${last_message ? last_message.content : 'No messages yet'}"
-                                       notifications=${unread_count}
-                                       dateText="${dateText}"}}}`).join('')
-}
+                            }: Record<string, string | number>) => {
+        let mes = 'No messages yet';
+        if (last_message) {
+            mes = last_message.content.replace(/['"&]/g, '');
+        }
+        return `
+                                    {{{ChatElement title="${title}"
+                                        id=${id}
+                                        text="${mes}"
+                                        notifications=${unread_count}
+                                        dateText="${dateText}"}}}
+                                    `;
+    }).join('')}
+                        </div>
                     </div>
                 </div>
+                {{{ActiveChat}}}
+                {{{Modal}}}
             </div>
-            {{{ActiveChat}}}
-            {{{Modal}}}
         </div>
         `;
     }

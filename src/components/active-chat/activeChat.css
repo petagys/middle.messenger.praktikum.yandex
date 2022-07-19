@@ -67,3 +67,7 @@
     display: flex;
     width: 100%;
 }
+
+.myMes {
+    justify-content: flex-end;
+}

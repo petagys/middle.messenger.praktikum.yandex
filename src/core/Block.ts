@@ -1,6 +1,7 @@
 import { nanoid } from 'nanoid';
 import Handlebars from 'handlebars';
 import EventBus from './EventBus';
+import renderDOM from './renderDOM';
 
 type Events = Values<typeof Block.EVENTS>;
 
@@ -267,10 +268,15 @@ export default class Block<P = any> {
     }
 
     show() {
-        this._el;
+        // renderDOM(this._element);
+        // this.getContent().style.display = 'block';
     }
 
     hide() {
-        this.getContent().style.display = 'none';
+        // this._removeEvents();
+        if (this._element) {
+            this._element.remove();
+        }
+        this.eventBus().emit(Block.EVENTS.FLOW_CWU);
     }
 }

@@ -81,9 +81,9 @@ class HTTPTransport {
             };
             xhr.timeout = timeout;
 
-            xhr.onabort = reject;
-            xhr.onerror = reject;
-            xhr.ontimeout = reject;
+            xhr.onabort = () => reject;
+            xhr.onerror = () => reject;
+            xhr.ontimeout = () => reject;
 
             if (method === Methods.GET || !data) {
                 xhr.send();

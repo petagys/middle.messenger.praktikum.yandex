@@ -2,7 +2,25 @@ import { Dispatch } from '../core';
 import { apiHasError, transformUser } from '../utils';
 import { chatsAPI } from '../api/chats';
 import { ChatDTO, UserDTO } from '../api/types';
-import { mySocket } from '../utils/MyWebSocket';
+
+let socket: null|WebSocket = null;
+
+const initSocket = (userId: number, actionId: number, token: string):void => {
+    if (socket !== null) {
+        socket.close();
+    }
+    socket = new WebSocket(`wss://ya-praktikum.tech/ws/chats/${userId}/${actionId}/${token}`);
+};
+
+const getMessages = (data: string) => {
+    const newData: Array<Message> | Message = JSON.parse(data);
+    if (Array.isArray(newData)) {
+        console.log(newData);
+        return newData;
+    }
+    console.log([...window.store.getState().activeChat.messages, newData]);
+    return [newData, ...window.store.getState().activeChat.messages];
+};
 
 export const getChats = async (
     dispatch: Dispatch<AppState>,
@@ -83,46 +101,41 @@ export const getChatInfo = async (
         loadChat: false,
     });
 
-    const socket = mySocket.set(state.user.id, action.id, response.token);
+    initSocket(state.user.id, action.id, response.token);
+    if (socket !== null) {
+        socket.addEventListener('open', () => {
+            console.log('Соединение установлено');
 
-    socket.addEventListener('open', () => {
-        console.log('Соединение установлено');
-
-        socket.send(JSON.stringify({
-            content: '0',
-            type: 'get old',
-        }));
-    });
-
-    socket.addEventListener('close', event => {
-        if (event.wasClean) {
-            console.log('Соединение закрыто чисто');
-        } else {
-            console.log('Обрыв соединения');
-        }
-
-        console.log(`Код: ${event.code} | Причина: ${event.reason}`);
-    });
-
-    socket.addEventListener('message', event => {
-        console.log('Получены данные', event.data);
-        dispatch({
-            activeChat: {
-                ...newActiveChat,
-                messages: () => {
-                    const newData = JSON.parse(event.data);
-                    if (Array.isArray(newData)) {
-                        return newData;
-                    }
-                    return [...window.store.getState().activeChat.messages, newData];
-                },
-            },
+            socket!.send(JSON.stringify({
+                content: '0',
+                type: 'get old',
+            }));
         });
-    });
 
-    socket.addEventListener('error', event => {
-        console.log('Ошибка', event.message);
-    });
+        socket.addEventListener('close', event => {
+            if (event.wasClean) {
+                console.log('Соединение закрыто чисто');
+            } else {
+                console.log('Обрыв соединения');
+            }
+
+            console.log(`Код: ${event.code} | Причина: ${event.reason}`);
+        });
+
+        socket.addEventListener('message', event => {
+            console.log('Получены данные', event.data);
+            dispatch({
+                activeChat: {
+                    ...newActiveChat,
+                    messages: getMessages(event.data),
+                },
+            });
+        });
+
+        socket.addEventListener('error', event => {
+            console.log('Ошибка', event.message);
+        });
+    }
 };
 
 export const sendMessage = async (
@@ -130,9 +143,7 @@ export const sendMessage = async (
     state: AppState,
     action: string,
 ) => {
-    const socket = mySocket.get();
-
-    socket?.send(JSON.stringify({
+    socket!.send(JSON.stringify({
         content: action,
         type: 'message',
     }));

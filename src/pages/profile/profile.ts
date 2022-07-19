@@ -50,6 +50,7 @@ class Profile extends Block<ProfileProps> {
         const {
             user, pageLoading, loginFormError, isLoading,
         } = this.props.store.getState();
+        console.log(user)
 
         if (pageLoading) {
             return '{{{PageLoader}}}';
@@ -58,7 +59,7 @@ class Profile extends Block<ProfileProps> {
             return `
         <div>
             <div class="outer">
-                User isn't authorized!
+                User isn't authorized!!
             </div>
         </div>
         `;
@@ -79,7 +80,7 @@ class Profile extends Block<ProfileProps> {
                 <div class="info">${user.firstName} ${user.secondName}</div>
                 <div class="info">${user.email}</div>
                 <div class="info">${user.phone}</div>
-                <div class="info">${user.displayName}</div>
+                <div class="info">${user.displayName ? user.displayName : ''}</div>
                 ${
     // eslint-disable-next-line max-len
     paData.pa.map(({ label, inputType, inputName }: Record<string, string>) => `{{{ProfileElement label="${label}" inputType="${inputType}" inputName="${inputName}" ref="${inputName}" validation="${inputName}" }}}`).join('')

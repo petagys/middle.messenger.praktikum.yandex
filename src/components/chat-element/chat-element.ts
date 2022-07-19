@@ -28,7 +28,9 @@ class ChatElement extends Block {
                     <div class="chat__name">{{title}}</div>
                     <div class="chat__text ellipsis">
                         <span class="chat__text-inner">
-                            {{text}}
+                            ${this.props.text.replace(/[\u00A0-\u9999<>&]/g, (i) => {
+        return `&#${i.charCodeAt(0)};`;
+    })}
                         </span>
                     </div>
                 </div>

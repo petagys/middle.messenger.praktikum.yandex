@@ -21,14 +21,16 @@ class ActiveChat extends Block {
             onClick: () => {
                 const message: HTMLInputElement = this.element?.querySelector('input[name="message"]')!;
                 if (message.value !== '') {
-                    this.props.store.dispatch(sendMessage, message.value);
+                    this.props.store.dispatch(sendMessage, message.value.replace(/[\u00A0-\u9999<>&]/g, (i) => {
+                        return `&#${i.charCodeAt(0)};`;
+                    }));
                 }
             },
         });
     }
 
     render() {
-        const { activeChat: { title, messages }, loadChat } = this.props.store.getState();
+        const { activeChat: { title, messages }, loadChat, user } = this.props.store.getState();
 
         if (loadChat) {
             return `<div class="loadOut">
@@ -49,7 +51,7 @@ class ActiveChat extends Block {
             </div>
             <div class="chatArea">
                 ${messages.map((mes: Message) => `
-                    <div class="messageLine">
+                    <div class="messageLine ${mes.user_id === user.id ? 'myMes' : ''}">
                         <div class="message">
                             ${mes.content}
                         </div>

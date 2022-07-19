@@ -60,7 +60,7 @@ class Route<P = any> {
 
         this.#block.setProps({ idPath: id });
         renderDOM(this.#block);
-        this.#block.show();
+        // this.#block.show();
     }
 }
 
