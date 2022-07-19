@@ -267,7 +267,7 @@ export default class Block<P = any> {
     }
 
     show() {
-        this.getContent().style.display = 'block';
+        this._el;
     }
 
     hide() {
