@@ -26,10 +26,12 @@
     background-color: #EFEFEF;
     margin: 0 auto 92px;
     cursor: pointer;
+    background-repeat: round;
 
     &:hover{
         background: #000000;
         opacity: 0.5;
+        background-repeat: round;
     }
 
     &__text {
@@ -45,13 +47,6 @@
 
         &:hover {
             opacity: 1;
-        }
-
-        & > input[type=file]{
-            z-index: -1;
-            opacity: 0;
-            position: absolute;
-            width: 0;
         }
 
         & > label {
@@ -76,26 +71,24 @@
     background-color: #FFF;
     text-align: right;
 }
-
-.exit {
-    color: #FF0000;
-}
-
 .saveBlock {
     margin-top: 48px;
 }
 
-.return {
-    position: absolute;
-    width: 64px;
-    background-color: #FBFBFB;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.error-block{
+    color: red;
+}
+
+.info {
+    font-size: 20px;
+    margin-bottom: 4px;
+}
+
+.exit {
+    color: #FF0000;
     cursor: pointer;
 
     &:hover {
-        background-color: #DADADA;
+        text-decoration: underline;
     }
 }

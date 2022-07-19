@@ -2,23 +2,23 @@ import { nanoid } from 'nanoid';
 import Handlebars from 'handlebars';
 import EventBus from './EventBus';
 
-interface BlockMeta<P = any> {
-  props: P;
-}
-
 type Events = Values<typeof Block.EVENTS>;
+
+export interface BlockClass<P> extends Function {
+    new(props: P): Block<P>;
+    componentName?: string;
+}
 
 export default class Block<P = any> {
     static EVENTS = {
         INIT: 'init',
         FLOW_CDM: 'flow:component-did-mount',
         FLOW_CDU: 'flow:component-did-update',
+        FLOW_CWU: 'flow:component-will-unmount',
         FLOW_RENDER: 'flow:render',
     } as const;
 
     public id = nanoid(6);
-
-    private readonly _meta: BlockMeta;
 
     protected _element: Nullable<HTMLElement> = null;
 
@@ -30,18 +30,16 @@ export default class Block<P = any> {
 
     protected state: any = {};
 
-    refs: { [key: string]: Block } = {};
+    protected refs: { [key: string]: HTMLElement } = {};
+
+    public static componentName?: string;
 
     public constructor(props?: P) {
         const eventBus = new EventBus<Events>();
 
-        this._meta = {
-            props,
-        };
-
         this.getStateFromProps(props);
 
-        this.props = this._makePropsProxy(props || {} as P);
+        this.props = this._makePropsProxy(props || ({} as P));
         this.state = this._makePropsProxy(this.state);
 
         this.eventBus = () => eventBus;
@@ -51,10 +49,26 @@ export default class Block<P = any> {
         eventBus.emit(Block.EVENTS.INIT, this.props);
     }
 
+    /**
+     * Хелпер, который проверяет, находится ли элемент в DOM дереве
+     * И есть нет, триггерит событие COMPONENT_WILL_UNMOUNT
+     */
+    _checkInDom() {
+        const elementInDOM = document.body.contains(this._element);
+
+        if (elementInDOM) {
+            setTimeout(() => this._checkInDom(), 1000);
+            return;
+        }
+
+        this.eventBus().emit(Block.EVENTS.FLOW_CWU, this.props);
+    }
+
     _registerEvents(eventBus: EventBus<Events>) {
         eventBus.on(Block.EVENTS.INIT, this.init.bind(this));
         eventBus.on(Block.EVENTS.FLOW_CDM, this._componentDidMount.bind(this));
         eventBus.on(Block.EVENTS.FLOW_CDU, this._componentDidUpdate.bind(this));
+        eventBus.on(Block.EVENTS.FLOW_CWU, this._componentWillUnmount.bind(this));
         eventBus.on(Block.EVENTS.FLOW_RENDER, this._render.bind(this));
     }
 
@@ -72,11 +86,19 @@ export default class Block<P = any> {
     }
 
     _componentDidMount(props: P) {
+        this._checkInDom();
+
         this.componentDidMount(props);
     }
 
-    componentDidMount(props: P) {
+    componentDidMount(props: P) { }
+
+    _componentWillUnmount() {
+        this.eventBus().destroy();
+        this.componentWillUnmount();
     }
+
+    componentWillUnmount() { }
 
     _componentDidUpdate(oldProps: P, newProps: P) {
         const response = this.componentDidUpdate(oldProps, newProps);
@@ -90,7 +112,7 @@ export default class Block<P = any> {
         return true;
     }
 
-    setProps = (nextProps: P) => {
+    setProps = (nextProps: Partial<P>) => {
         if (!nextProps) {
             return;
         }
@@ -116,10 +138,10 @@ export default class Block<P = any> {
         this._removeEvents();
         const newElement = fragment.firstElementChild!;
 
-    this._element!.replaceWith(newElement);
+        this._element!.replaceWith(newElement);
 
-    this._element = newElement as HTMLElement;
-    this._addEvents();
+        this._element = newElement as HTMLElement;
+        this._addEvents();
     }
 
     protected render(): string {
@@ -127,10 +149,12 @@ export default class Block<P = any> {
     }
 
     getContent(): HTMLElement {
-    // Хак, чтобы вызвать CDM только после добавления в DOM
+        // Хак, чтобы вызвать CDM только после добавления в DOM
         if (this.element?.parentNode?.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
             setTimeout(() => {
-                if (this.element?.parentNode?.nodeType !== Node.DOCUMENT_FRAGMENT_NODE) {
+                if (
+                    this.element?.parentNode?.nodeType !== Node.DOCUMENT_FRAGMENT_NODE
+                ) {
                     this.eventBus().emit(Block.EVENTS.FLOW_CDM);
                 }
             }, 100);
@@ -140,8 +164,8 @@ export default class Block<P = any> {
     }
 
     _makePropsProxy(props: any): any {
-    // Можно и так передать this
-    // Такой способ больше не применяется с приходом ES6+
+        // Можно и так передать this
+        // Такой способ больше не применяется с приходом ES6+
         const self = this;
 
         return new Proxy(props as unknown as object, {
@@ -154,7 +178,7 @@ export default class Block<P = any> {
 
                 // Запускаем обновление компоненты
                 // Плохой cloneDeep, в след итерации нужно заставлять добавлять cloneDeep им самим
-                self.eventBus().emit(Block.EVENTS.FLOW_CDU, { ...target, prop }, target);
+                self.eventBus().emit(Block.EVENTS.FLOW_CDU, { ...target }, target);
                 return true;
             },
             deleteProperty() {
@@ -175,7 +199,7 @@ export default class Block<P = any> {
         }
 
         Object.entries(events).forEach(([event, listener]) => {
-      this._element!.removeEventListener(event, listener);
+            this._element!.removeEventListener(event, listener);
         });
     }
 
@@ -187,7 +211,7 @@ export default class Block<P = any> {
         }
 
         Object.entries(events).forEach(([event, listener]) => {
-      this._element!.addEventListener(event, listener);
+            this._element!.addEventListener(event, listener);
         });
     }
 
@@ -195,20 +219,23 @@ export default class Block<P = any> {
         const fragment = document.createElement('template');
 
         /**
-     * Рендерим шаблон
-     */
+         * Рендерим шаблон
+         */
         const template = Handlebars.compile(this.render());
         fragment.innerHTML = template({
-            ...this.state, ...this.props, children: this.children, refs: this.refs,
+            ...this.state,
+            ...this.props,
+            children: this.children,
+            refs: this.refs,
         });
 
         /**
-     * Заменяем заглушки на компоненты
-     */
+         * Заменяем заглушки на компоненты
+         */
         Object.entries(this.children).forEach(([id, component]) => {
             /**
-       * Ищем заглушку по id
-       */
+             * Ищем заглушку по id
+             */
             const stub = fragment.content.querySelector(`[data-id="${id}"]`);
 
             if (!stub) {
@@ -218,14 +245,14 @@ export default class Block<P = any> {
             const stubChilds = stub.childNodes.length ? stub.childNodes : [];
 
             /**
-       * Заменяем заглушку на component._element
-       */
+             * Заменяем заглушку на component._element
+             */
             const content = component.getContent();
             stub.replaceWith(content);
 
             /**
-       * Ищем элемент layout-а, куда вставлять детей
-       */
+             * Ищем элемент layout-а, куда вставлять детей
+             */
             const layoutContent = content.querySelector('[data-layout="1"]');
 
             if (layoutContent && stubChilds.length) {
@@ -234,16 +261,21 @@ export default class Block<P = any> {
         });
 
         /**
-     * Возвращаем фрагмент
-     */
+         * Возвращаем фрагмент
+         */
         return fragment.content;
     }
 
     show() {
-        this.getContent().style.display = 'block';
+        // renderDOM(this._element);
+        // this.getContent().style.display = 'block';
     }
 
     hide() {
-        this.getContent().style.display = 'none';
+        // this._removeEvents();
+        if (this._element) {
+            this._element.remove();
+        }
+        this.eventBus().emit(Block.EVENTS.FLOW_CWU);
     }
 }

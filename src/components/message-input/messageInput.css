@@ -1,0 +1,11 @@
+.messageField {
+    background: #EFEFEF;
+    border-radius: 30px;
+    padding: 10px 20px;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 12px;
+    color: #222;
+    width: 100%;
+    border: none;
+}

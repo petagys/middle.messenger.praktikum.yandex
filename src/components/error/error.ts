@@ -2,9 +2,7 @@ import Block from '../../core/Block';
 import './error.css';
 
 export class Error extends Block {
-    static get blockName():string {
-        return 'Error';
-    }
+    static componentName = 'Error';
 
     render(): string {
         return `

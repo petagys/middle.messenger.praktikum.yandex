@@ -36,9 +36,7 @@ export class ProfileElement extends Block {
         });
     }
 
-    static get blockName():string {
-        return 'ProfileElement';
-    }
+    static componentName = 'ProfileElement';
 
     render(): string {
         return `

@@ -1,12 +1,23 @@
 import Block from '../../core/Block';
 import paData from '../../data/paData.json';
-import arrowBack from '../../images/arrow_left.svg';
 
 import '../../css/pa.css';
+import { withStore } from '../../utils/withStore';
+import { withRouter } from '../../utils/withRouter';
+import { Router, Store } from '../../core';
+import { changePass } from '../../services/user';
+import { validateValue } from '../../helpers/validator';
 
-export class ChangePass extends Block {
-    constructor() {
+type ChangePassProps = {
+    router: Router,
+    store: Store<AppState>,
+    onClick: () => void
+}
+
+class ChangePass extends Block<ChangePassProps> {
+    constructor(props: ChangePassProps) {
         super({
+            ...props,
             onClick: () => {
                 const inputs: NodeListOf<HTMLInputElement> = this.element?.querySelectorAll('input[type="password"]')!;
                 const result: Record<string, string> = {};
@@ -14,15 +25,37 @@ export class ChangePass extends Block {
                     const { name, value } = input;
                     result[name] = value;
                 });
+
+                const errorNewPass: string = validateValue('password', result.newPassword);
+                if (errorNewPass !== '') {
+                    this.props.store.dispatch({ loginFormError: `New ${errorNewPass}` });
+                } else {
+                    this.props.store.dispatch(changePass, result);
+                }
+
                 console.log(result);// eslint-disable-line
-                // eslint-disable-next-line
-                console.log('Про валидацию на этой странице в задании не упоминается. '
-                + 'Да и нет правил для валидации этих полей. На всех остальных страницах валидация присутствует.');
             },
         });
     }
 
     render() {
+        const {
+            user, pageLoading, loginFormError, isLoading,
+        } = this.props.store.getState();
+
+        if (pageLoading) {
+            return '{{{PageLoader}}}';
+        }
+        if (!user) {
+            return `
+        <div>
+            <div class="outer">
+                User isn't authorized!
+            </div>
+        </div>
+        `;
+        }
+
         return `
         <div>
             <div class="outer">
@@ -37,16 +70,17 @@ export class ChangePass extends Block {
     paData.pass.map(({ label, inputType, inputName }: Record<string, string>) => `{{{ProfileElement label="${label}" inputType="${inputType}" inputName="${inputName}" }}}`).join('')
 }
 
+                <div class="error-block">
+                    ${loginFormError || ''}
+                </div>
                 <div class="saveBlock">
-                    {{{Button text="Save" onClick=onClick}}}
-                </div> 
+                    ${isLoading ? '{{{Loader}}}' : '{{{Button text="Save" onClick=onClick}}}'}
+                </div>
             </div>
-            <div class="return">
-                <a href="${document.location.origin}/chats">
-                    <img class="icon" src="${arrowBack}" />
-                </a>
-            </div>
+            {{{Back}}}
         </div>
         `;
     }
 }
+
+export default withRouter(withStore(ChangePass));
