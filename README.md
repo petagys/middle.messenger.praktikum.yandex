@@ -13,7 +13,7 @@
 https://cheerful-sawine-0b422c.netlify.app/
 
 Ссылка на ПР:
-https://github.com/petagys/middle.messenger.praktikum.yandex/pull/2
+https://github.com/petagys/middle.messenger.praktikum.yandex/pull/3
 
 
 Запуск через Expess.js - npm start
