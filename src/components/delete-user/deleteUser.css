@@ -1,5 +1,5 @@
-.add {
-    color: #00A523;
+.del {
+    color: red;
     cursor: pointer;
 
     &:hover {

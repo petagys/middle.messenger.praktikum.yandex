@@ -1,6 +1,5 @@
-import { UserDTO } from '../../api/types';
 import { Block, Store } from '../../core';
-import { addUser, deleteUser } from '../../services/chats';
+import { addUser } from '../../services/chats';
 import { withStore } from '../../utils';
 import './addUser.css';
 
@@ -19,14 +18,8 @@ class AddUser extends Block {
             ...props,
             events: {
                 click: () => {
-                    const { searchResult, activeChat: { id, users } } = this.props.store.getState();
-
-                    if (props.text === 'Delete') {
-                        this.props.store.dispatch(deleteUser, { user: users[props.index], chatId: id });
-                    } else {
-                        this.props.store.dispatch(addUser, { user: searchResult[props.index], chatId: id });
-                    }
-                    console.log(searchResult[props.index], id);
+                    const { searchResult, activeChat: { id } } = this.props.store.getState();
+                    this.props.store.dispatch(addUser, { user: searchResult[props.index], chatId: id });
                 },
             },
         });
@@ -35,7 +28,7 @@ class AddUser extends Block {
     render() {
         const { text } = this.props;
         return `
-            '<span class="${text === 'Delete' ? 'del' : 'add'}">{{{Logout text="${text}"}}}</span>'
+            '<span class="add">{{{Logout text="${text}"}}}</span>'
         `;
     }
 }

@@ -1,12 +1,12 @@
 /* eslint-disable camelcase */
 import { Block, Store } from '../../core';
-import { withRouter, withStore } from '../../utils';
+import { withStore } from '../../utils';
 import './activeChat.css';
 
 import attache from '../../images/attache.svg';
 import { sendMessage } from '../../services/chats';
 
-interface acProps {
+interface ActiveChatProps {
     openModal: () => {},
     openClick: () => {},
     store: Store<AppState>
@@ -14,15 +14,16 @@ interface acProps {
 class ActiveChat extends Block {
     static componentName = 'ActiveChat';
 
-    constructor(props: acProps) {
+    constructor(props: ActiveChatProps) {
         super(props);
         this.setProps({
             openModal: () => this.props.store.dispatch({ openModal: true }),
             onClick: () => {
                 const message: HTMLInputElement = this.element?.querySelector('input[name="message"]')!;
                 if (message.value !== '') {
-                    this.props.store.dispatch(sendMessage, message.value.replace(/[\u00A0-\u9999<>&]/g, (i) => {
-                        return `&#${i.charCodeAt(0)};`;
+                    const forbiddenSymbols: RegExp = /[<>&]/g;
+                    this.props.store.dispatch(sendMessage, message.value.replace(forbiddenSymbols, (symbol: string) => {
+                        return `&#${symbol.charCodeAt(0)};`;
                     }));
                 }
             },
@@ -68,4 +69,4 @@ class ActiveChat extends Block {
     }
 }
 
-export default withRouter(withStore(ActiveChat));
+export default withStore(ActiveChat);

@@ -1,15 +1,20 @@
-import { userAPI } from '../api/user';
+import { Password, userAPI } from '../api/user';
 import { UserDTO } from '../api/types';
 import { Dispatch } from '../core';
 import { apiHasError, transformUser } from '../utils';
 
 export const changePass = async (
     dispatch: Dispatch<AppState>,
-    state: AppState,
-    action: UserDTO,
+    _state: AppState,
+    action: Password,
 ) => {
     dispatch({ isLoading: true, loginFormError: '' });
-    const response: any = await userAPI.password(action);
+    let response: EmptyResponse;
+    try {
+        response = await userAPI.password(action);
+    } catch (err) {
+        response = { reason: 'Ошибка!' };
+    }
 
     if (apiHasError(response)) {
         dispatch({ isLoading: false, loginFormError: response.reason });
@@ -21,11 +26,16 @@ export const changePass = async (
 
 export const changeProfile = async (
     dispatch: Dispatch<AppState>,
-    state: AppState,
+    _state: AppState,
     action: UserDTO,
 ) => {
     dispatch({ isLoading: true, loginFormError: '' });
-    const response: any = await userAPI.profile(action);
+    let response: ResponseError | User;
+    try {
+        response = await userAPI.profile(action);
+    } catch (err) {
+        response = { reason: 'Ошибка!' };
+    }
 
     if (apiHasError(response)) {
         dispatch({ isLoading: false, loginFormError: response.reason });
@@ -36,7 +46,7 @@ export const changeProfile = async (
 
 export const changeAvatar = async (
     dispatch: Dispatch<AppState>,
-    state: AppState,
+    _state: AppState,
     action: FormData,
 ) => {
     dispatch({ isLoading: true, loginFormError: '' });
@@ -66,11 +76,17 @@ export const changeAvatar = async (
 
 export const searchUser = async (
     dispatch: Dispatch<AppState>,
-    state: AppState,
-    action: UserDTO,
+    _state: AppState,
+    action: { login: string },
 ) => {
     dispatch({ isLoading: true, loginFormError: '' });
-    const response: any = await userAPI.search(action);
+    let response: ResponseError | User[];
+
+    try {
+        response = await userAPI.search(action);
+    } catch (err) {
+        response = { reason: 'Ошибка!' };
+    }
 
     if (apiHasError(response)) {
         dispatch({ isLoading: false, loginFormError: response.reason });

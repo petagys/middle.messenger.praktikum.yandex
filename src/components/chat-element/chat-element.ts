@@ -1,12 +1,18 @@
+import { Store } from '../../core';
 import Block from '../../core/Block';
 import { getChatInfo } from '../../services/chats';
-import { withRouter, withStore } from '../../utils';
+import { withStore } from '../../utils';
 import './chat-element.css';
+
+interface ChatElProps {
+    store: Store<AppState>,
+    text: string
+}
 
 class ChatElement extends Block {
     static componentName = 'ChatElement';
 
-    constructor(props: any) {
+    constructor(props: ChatElProps) {
         super({
             ...props,
             events: {
@@ -28,9 +34,7 @@ class ChatElement extends Block {
                     <div class="chat__name">{{title}}</div>
                     <div class="chat__text ellipsis">
                         <span class="chat__text-inner">
-                            ${this.props.text.replace(/[\u00A0-\u9999<>&]/g, (i:number) => {
-        return `&#${String(i).charCodeAt(0)};`;
-    })}
+                            ${this.props.text}
                         </span>
                     </div>
                 </div>
@@ -43,4 +47,4 @@ class ChatElement extends Block {
     }
 }
 
-export default withRouter(withStore(ChatElement));
+export default withStore(ChatElement);
