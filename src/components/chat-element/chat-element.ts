@@ -6,7 +6,9 @@ import './chat-element.css';
 
 interface ChatElProps {
     store: Store<AppState>,
-    text: string
+    text: string,
+    id: number,
+    title: string,
 }
 
 class ChatElement extends Block {
@@ -18,8 +20,8 @@ class ChatElement extends Block {
             events: {
                 click: () => {
                     this.props.store.dispatch(getChatInfo, {
-                        id: this.props.id,
-                        title: this.props.title,
+                        id: props.id,
+                        title: props.title,
                     });
                 },
             },

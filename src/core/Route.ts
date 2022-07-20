@@ -3,10 +3,6 @@ import { BlockClass } from './Block';
 
 type props = Record<string, any>;
 
-function isEqual(lhs: string, rhs: string): boolean {
-    return lhs === rhs;
-}
-
 export default class Route<P = any> {
     #pathname: string;
 
@@ -41,7 +37,7 @@ export default class Route<P = any> {
         if (this.#isPrefixId) {
             pathname = pathname.replace(/\/\d+/, '');
         }
-        return isEqual(pathname, this.#pathname);
+        return pathname === this.#pathname;
     }
 
     #prefixHandler() {

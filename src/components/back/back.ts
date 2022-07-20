@@ -27,7 +27,7 @@ class Back extends Block {
     render(): string {
         return `
             <div title="Go back" class="return">
-                <img src="${arrowBack}" />
+                <img src="${arrowBack}" alt="arrow back" />
             </div>
         `;
     }
