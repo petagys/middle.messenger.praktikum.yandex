@@ -1,1 +1,1 @@
-export { ChatElement as default } from './chat-element';
+export { default as ChatElement } from './chat-element';

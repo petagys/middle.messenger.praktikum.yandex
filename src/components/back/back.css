@@ -1,0 +1,14 @@
+.return {
+    position: absolute;
+    width: 64px;
+    background-color: #FBFBFB;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #DADADA;
+    }
+}

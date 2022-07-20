@@ -2,14 +2,14 @@ import Handlebars, { HelperOptions } from 'handlebars';
 import Block from './Block';
 
 export interface BlockConstructable<Props = Record<string, unknown>> {
-  blockName: string;
-  new(props: Props): Block;
+    new(props: Props): Block;
+    componentName?: string;
 }
 
 export default function registerComponent<Props extends any>(Component:
-    BlockConstructable<Props>, Name: string) {
+    BlockConstructable<Props>) {
     Handlebars.registerHelper(
-        Name,
+        Component.componentName || Component.name,
         function (this: Props, { hash: { ref, ...hash }, data, fn }: HelperOptions) {
             if (!data.root.children) {
                 data.root.children = {};

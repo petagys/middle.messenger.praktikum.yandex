@@ -1,0 +1,8 @@
+.exit {
+    color: #FF0000;
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}

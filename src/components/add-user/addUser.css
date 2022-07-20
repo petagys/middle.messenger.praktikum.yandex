@@ -1,0 +1,8 @@
+.add {
+    color: #00A523;
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}

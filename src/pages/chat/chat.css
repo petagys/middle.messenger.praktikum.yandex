@@ -1,17 +1,13 @@
 .main {
   display: flex;
-  background-color: #fff;
+  background-color: #FFF;
 }
 
 .block {
   &__chats {
     width: 25%;
-    border-right: 1px solid #eaeaea;
+    border-right: 1px solid #EAEAEA;
     height: 100vh;
-  }
-
-  &__personalChat {
-    width: 75%;
   }
 
   &__link-profile {
@@ -23,18 +19,18 @@
     text-align: center;
     margin: 0 12px;
     padding-bottom: 24px;
-    border-bottom: 1px solid #eaeaea;
+    border-bottom: 1px solid #EAEAEA;
   }
 
   &__list {
-    height: calc(100vh - 128px);
+    height: calc(100vh - 176px);
     overflow-y: auto;
   }
 }
 
 .searchInput {
   width: 100%;
-  background-color: #efefef;
+  background-color: #EFEFEF;
   background-image: url(../../images/search.svg);
   background-position: 8px 3px;
   background-repeat: no-repeat;
@@ -45,49 +41,7 @@
   background-size: 26px;
 }
 
-.flexBlock {
-    display: flex;
-    align-items: center;
-}
-
-.chatHeader {
-    padding: 10px 20px;
-    border-bottom: 1px solid #eaeaea;
-    justify-content: space-between;
-}
-
-.chatFooter {
-    padding: 10px 20px;
-    border-top: 1px solid #eaeaea;
-}
-
-.icon {
-    cursor: pointer;
-    padding: 4px;
-    &__attachment {
-        cursor: pointer;
-        margin-right: 12px;
-    }
-   
-    &__send {
-        cursor: pointer;
-        margin-left: 12px;
-    }
-   
-}
-
-.messageField {
-    background: #EFEFEF;
-    border-radius: 30px;
-    padding: 10px 20px;
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 12px;
-    color: #222;
-    width: 100%;
-    border: none;
-}
-
-.chatArea {
-    height: calc(100vh - 125px);
+.addBlock {
+  margin-bottom: 12px;
+  text-align: center;
 }

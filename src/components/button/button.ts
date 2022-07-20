@@ -7,17 +7,16 @@ interface ButtonProps {
 }
 
 export class Button extends Block {
+    static componentName = 'Button';
+
     constructor({ text, onClick }: ButtonProps) {
         super({ text, events: { click: onClick } });
     }
 
-    static get blockName():string {
-        return 'Button';
-    }
-
     render(): string {
-        return `<div>
-            <button class="btn" type="button">{{text}}</button>
+        return `
+            <div>
+                <button class="btn" type="button">{{text}}</button>
             <div>
         `;
     }
