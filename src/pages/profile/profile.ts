@@ -8,6 +8,8 @@ import { Router, Store } from '../../core';
 import { withRouter } from '../../utils/withRouter';
 import { changeProfile } from '../../services/user';
 import { logout } from '../../services/auth';
+import { UserDTO } from '../../api/types';
+import { transformUserBack } from '../../utils/apiTransformers';
 
 type ProfileProps = {
     router: Router,
@@ -63,26 +65,36 @@ class Profile extends Block<ProfileProps> {
         </div>
         `;
         }
+        const transformedUser: UserDTO = transformUserBack(user as User);
 
         return `
         <div>
             <div class="outer">
                 <div class="circle"
-                ${user.avatar
-        ? `style="background-image: url(${process.env.API_ENDPOINT}/resources/${user.avatar})"` : ''}>
+                ${transformedUser.avatar
+        ? `style="background-image: url(${process.env.API_ENDPOINT}/resources/${transformedUser.avatar})"` : ''}>
                     <div class="circle__text">
                         <label for="avatar">Change avatar</label>
                         {{{Avatar}}}
                     </div>
                 </div>
-                <div class="info">@${user.login}</div>
-                <div class="info">${user.firstName} ${user.secondName}</div>
-                <div class="info">${user.email}</div>
-                <div class="info">${user.phone}</div>
-                <div class="info">${user.displayName ? user.displayName : ''}</div>
+                <div class="info">@${transformedUser.login}</div>
+                <div class="info">${transformedUser.first_name} ${transformedUser.second_name}</div>
+                <div class="info">${transformedUser.email}</div>
+                <div class="info">${transformedUser.phone}</div>
+                <div class="info">${transformedUser.display_name ? transformedUser.display_name : ''}</div>
                 ${
-    // eslint-disable-next-line max-len
-    paData.pa.map(({ label, inputType, inputName }: Record<string, string>) => `{{{ProfileElement label="${label}" inputType="${inputType}" inputName="${inputName}" ref="${inputName}" validation="${inputName}" }}}`).join('')
+    paData.pa.map(({ label, inputType, inputName }: Record<string, string>) => {
+        return `
+    {{{ProfileElement
+        label="${label}"
+        inputType="${inputType}"
+        inputName="${inputName}"
+        ref="${inputName}"
+        value="${transformedUser[inputName] || ''}"
+        validation="${inputName}" }}}
+    `;
+    }).join('')
 }
 
                 <div class="error-block">

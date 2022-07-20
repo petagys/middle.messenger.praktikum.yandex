@@ -12,13 +12,13 @@ declare global {
         isLoading: boolean;
         pageLoading: boolean;
         loginFormError: string | null;
-        user: User | null;
+        user: User | UserDTO | null;
         chats: Array<Chat>;
         isLoadingChats: boolean;
         loadChat: boolean;
         openModal: boolean;
         activeChat: ActiveChat;
-        searchResult: Array<User>
+        searchResult: Array<User | UserDTO>
     };
 
     export type ActiveChat = {
@@ -32,9 +32,9 @@ declare global {
     export type User = {
         id: number;
         login: string;
-        first_name: string;
-        second_name: string;
-        display_name: string;
+        firstName: string;
+        secondName: string;
+        displayName: string;
         avatar: string;
         phone: string;
         email: string;

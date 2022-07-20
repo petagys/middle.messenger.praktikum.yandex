@@ -46,7 +46,7 @@ export class ProfileElement extends Block {
                </span>
                <div class="errorInputBlock">
                <div class="errorText">{{{Error ref='error'}}}</div>
-                {{{Input type=inputType name=inputName onBlur=onBlur onFocus=onFocus }}}
+                {{{Input type=inputType name=inputName onBlur=onBlur onFocus=onFocus value=value }}}
                </div>
             </div>
         `;

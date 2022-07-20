@@ -24,7 +24,7 @@ export const login = async (
         return;
     }
 
-    let responseUser: unknown | User | ResponseError;
+    let responseUser: unknown | UserDTO | ResponseError;
 
     try {
         responseUser = await authAPI.me();

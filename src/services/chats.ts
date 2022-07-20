@@ -110,7 +110,7 @@ export const getChatInfo = async (
         id: action.id,
         messages: [],
         token: response.token,
-        users: responseUsers.map((user: User) => transformUser(user) as unknown as UserDTO),
+        users: responseUsers.map((user: User) => transformUser(user as unknown as UserDTO)),
     };
 
     dispatch({
