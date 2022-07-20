@@ -1,9 +1,7 @@
 import { Router, Store } from '../../core';
 import Block from '../../core/Block';
-import { logout } from '../../services/auth';
 import { changeAvatar } from '../../services/user';
 import { withStore } from '../../utils';
-import httpController from '../../utils/httpController';
 
 import './avatar.css';
 

@@ -1,20 +1,20 @@
 import httpController from '../utils/httpController';
+import { UserDTO } from './types';
+
+export type Password = {
+    oldPassword?: string,
+    newPassword?: string,
+    confirm?: string,
+}
 
 export const userAPI = {
-    password: (data: Record<string, unknown>) => {
+    password: (data: Password): Promise<unknown> => {
         return httpController.put('user/password', data);
     },
-    profile: (data: Record<string, unknown>) => {
+    profile: (data: UserDTO): Promise<unknown> => {
         return httpController.put('user/profile', data);
     },
-    search: (data: Record<string, unknown>) => {
+    search: (data: {login: string}): Promise<unknown> => {
         return httpController.post('user/search', data);
     },
-    // avatar: (data: FormData) => {
-    //     return httpController.put('user/profile/avatar', data, {
-    //         headers: {
-    //             'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundaryZcZSeWOWVoQzVFBz',
-    //         },
-    //     });
-    // },
 };

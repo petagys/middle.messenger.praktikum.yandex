@@ -16,3 +16,4 @@ export { UserModal } from './userModal';
 export { Modal } from './modal';
 export { AddUser } from './add-user';
 export { Link } from './link';
+export { DeleteUser } from './delete-user';

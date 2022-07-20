@@ -1,4 +1,5 @@
 import { type } from 'os';
+import { UserDTO } from '../api/types';
 
 declare global {
     export type Nullable<T> = T | null;
@@ -11,18 +12,18 @@ declare global {
         isLoading: boolean;
         pageLoading: boolean;
         loginFormError: string | null;
-        user: User | null;
+        user: User | UserDTO | null;
         chats: Array<Chat>;
         isLoadingChats: boolean;
         loadChat: boolean;
         openModal: boolean;
         activeChat: ActiveChat;
-        searchResult: Array<User>
+        searchResult: Array<User | UserDTO>
     };
 
     export type ActiveChat = {
         token: string;
-        users: Array<User>;
+        users: Array<User|UserDTO>;
         title: string;
         id: number|null;
         messages: Array<Message>
@@ -57,7 +58,13 @@ declare global {
         user?: User;
         is_read?: boolean;
         file?: null;
-    }
+    };
+
+    export type ResponseError = {
+        reason: string;
+    };
+
+    export type EmptyResponse = ResponseError | string | unknown;
 }
 
 declare module '*.json' {

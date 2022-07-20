@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { Dispatch } from '../core';
 import { apiHasError, transformUser } from '../utils';
-import { chatsAPI } from '../api/chats';
+import { userChat, chatsAPI } from '../api/chats';
 import { ChatDTO, UserDTO } from '../api/types';
 
 let socket: null|WebSocket = null;
@@ -25,7 +25,12 @@ export const getChats = async (
     dispatch: Dispatch<AppState>,
 ) => {
     dispatch({ isLoadingChats: true });
-    const response: any = await chatsAPI.get();
+    let response: unknown | ResponseError | Chat[];
+    try {
+        response = await chatsAPI.get();
+    } catch (err) {
+        response = { reason: 'Ошибка!' };
+    }
 
     if (apiHasError(response)) {
         dispatch({ isLoadingChats: false });
@@ -36,10 +41,15 @@ export const getChats = async (
 
 export const addChat = async (
     dispatch: Dispatch<AppState>,
-    state: AppState,
+    _state: AppState,
     action: ChatDTO,
 ) => {
-    const response: any = await chatsAPI.add(action);
+    let response: EmptyResponse;
+    try {
+        response = await chatsAPI.add(action);
+    } catch (err) {
+        response = { reason: 'Ошибка!' };
+    }
     if (apiHasError(response)) {
         // eslint-disable-next-line no-alert
         alert(response.reason);
@@ -67,7 +77,12 @@ export const getChatInfo = async (
         },
     });
 
-    const response: any = await chatsAPI.getToken(action.id);
+    let response: {token: string} | ResponseError;
+    try {
+        response = await chatsAPI.getToken(action.id);
+    } catch (err) {
+        response = { reason: 'Ошибка!' };
+    }
 
     if (apiHasError(response)) {
         // eslint-disable-next-line no-alert
@@ -76,7 +91,12 @@ export const getChatInfo = async (
         return;
     }
 
-    const responseUsers: any = await chatsAPI.getUsers(action.id);
+    let responseUsers: ResponseError | User[];
+    try {
+        responseUsers = await chatsAPI.getUsers(action.id);
+    } catch (err) {
+        responseUsers = { reason: 'Ошибка!' };
+    }
 
     if (apiHasError(responseUsers)) {
         // eslint-disable-next-line no-alert
@@ -90,7 +110,7 @@ export const getChatInfo = async (
         id: action.id,
         messages: [],
         token: response.token,
-        users: responseUsers.map((user: UserDTO) => transformUser(user)),
+        users: responseUsers.map((user: User) => transformUser(user as unknown as UserDTO)),
     };
 
     dispatch({
@@ -138,8 +158,8 @@ export const getChatInfo = async (
 };
 
 export const sendMessage = async (
-    dispatch: Dispatch<AppState>,
-    state: AppState,
+    _dispatch: Dispatch<AppState>,
+    _state: AppState,
     action: string,
 ) => {
     socket!.send(JSON.stringify({
@@ -151,16 +171,24 @@ export const sendMessage = async (
 export const addUser = async (
     dispatch: Dispatch<AppState>,
     state: AppState,
-    action: Record<string, any>,
+    action: {
+        user: UserDTO,
+        chatId: number
+    },
 ) => {
     dispatch({ isLoading: true, loginFormError: '' });
-    const body = {
+    const body: userChat = {
         users: [
             action.user.id,
         ],
         chatId: action.chatId,
     };
-    const response: any = await chatsAPI.addUser(body);
+    let response: EmptyResponse;
+    try {
+        response = await chatsAPI.addUser(body);
+    } catch (err) {
+        response = { reason: 'Ошибка!' };
+    }
 
     if (apiHasError(response)) {
         dispatch({ isLoading: false, loginFormError: response.reason });
@@ -179,16 +207,24 @@ export const addUser = async (
 export const deleteUser = async (
     dispatch: Dispatch<AppState>,
     state: AppState,
-    action: Record<string, any>,
+    action: {
+        user: UserDTO,
+        chatId: number
+    },
 ) => {
     dispatch({ isLoading: true, loginFormError: '' });
-    const body = {
+    const body: userChat = {
         users: [
             action.user.id,
         ],
         chatId: action.chatId,
     };
-    const response: any = await chatsAPI.deleteUser(body);
+    let response: EmptyResponse;
+    try {
+        response = await chatsAPI.deleteUser(body);
+    } catch (err) {
+        response = { reason: 'Ошибка!' };
+    }
 
     if (apiHasError(response)) {
         dispatch({ isLoading: false, loginFormError: response.reason });

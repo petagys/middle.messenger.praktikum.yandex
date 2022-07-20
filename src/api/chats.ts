@@ -1,22 +1,31 @@
 import httpController from '../utils/httpController';
 
+type addingChat = {
+    title: string
+};
+
+export type userChat = {
+    users: Array<number>,
+    chatId: number,
+};
+
 export const chatsAPI = {
-    get: () => {
+    get: ():Promise<unknown> => {
         return httpController.get('chats');
     },
-    add: (data: Record<string, unknown>) => {
+    add: (data: addingChat): Promise<unknown> => {
         return httpController.post('chats', data);
     },
-    getUsers: (id: number) => {
+    getUsers: (id: number): Promise<unknown> => {
         return httpController.get(`chats/${String(id)}/users`);
     },
-    getToken: (id: number) => {
+    getToken: (id: number): Promise<unknown> => {
         return httpController.post(`chats/token/${String(id)}`);
     },
-    addUser: (data: Record<string, unknown>) => {
+    addUser: (data: userChat): Promise<unknown> => {
         return httpController.put('chats/users', data);
     },
-    deleteUser: (data: Record<string, unknown>) => {
+    deleteUser: (data: userChat): Promise<unknown> => {
         return httpController.delete('chats/users', data);
     },
 };

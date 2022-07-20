@@ -1,29 +1,36 @@
-import { authAPI } from '../api/auth';
+import { authAPI, LoginPayload } from '../api/auth';
 import { UserDTO } from '../api/types';
 import type { Dispatch } from '../core';
 import { defaultState } from '../store';
 import { transformUser, apiHasError } from '../utils';
 
-type LoginPayload = {
-  login: string;
-  password: string;
-};
-
 export const login = async (
     dispatch: Dispatch<AppState>,
-    state: AppState,
+    _state: AppState,
     action: LoginPayload,
 ) => {
     dispatch({ isLoading: true, loginFormError: '' });
 
-    const response = await authAPI.login(action);
+    let response: EmptyResponse;
+
+    try {
+        response = await authAPI.login(action);
+    } catch (err) {
+        response = { reason: 'Ошибка!' };
+    }
 
     if (apiHasError(response)) {
         dispatch({ isLoading: false, loginFormError: response.reason });
         return;
     }
 
-    const responseUser = await authAPI.me();
+    let responseUser: unknown | UserDTO | ResponseError;
+
+    try {
+        responseUser = await authAPI.me();
+    } catch (err) {
+        responseUser = { reason: 'Ошибка!' };
+    }
 
     dispatch({ loginFormError: null });
 
@@ -32,7 +39,7 @@ export const login = async (
         return;
     }
 
-    dispatch({ user: transformUser(responseUser as UserDTO), isLoading: false, loginFormError: '' });
+    dispatch({ user: transformUser(responseUser as unknown as UserDTO), isLoading: false, loginFormError: '' });
 
     window.router.go('/chats');
 };
@@ -40,25 +47,37 @@ export const login = async (
 export const logout = async (dispatch: Dispatch<AppState>) => {
     dispatch({ isLoading: true });
 
-    const response = await authAPI.logout();
+    let response: unknown | string | ResponseError;
+
+    try {
+        response = await authAPI.logout();
+    } catch (err) {
+        response = { reason: 'Ошибка!' };
+    }
+
     if (apiHasError(response)) {
         dispatch({ isLoading: false });
         return;
     }
 
-    dispatch(defaultState);
+    dispatch({ ...defaultState });
 
     window.router.go('/');
 };
 
 export const registration = async (
     dispatch: Dispatch<AppState>,
-    state: AppState,
+    _state: AppState,
     action: UserDTO,
 ) => {
     dispatch({ isLoading: true, loginFormError: '' });
-    const response: any = await authAPI.registration(action);
+    let response: ResponseError | {id: number} | unknown;
 
+    try {
+        response = await authAPI.registration(action);
+    } catch (err) {
+        response = { reason: 'Ошибка!' };
+    }
     if (apiHasError(response)) {
         dispatch({ isLoading: false, loginFormError: response.reason });
         return;

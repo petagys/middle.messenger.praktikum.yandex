@@ -34,7 +34,6 @@ class ChatPage extends Block {
         const {
             user, pageLoading, chats, isLoadingChats,
         } = this.props.store.getState();
-        console.log(1, user);
 
         if (pageLoading) {
             return '{{{PageLoader}}}';
@@ -70,7 +69,8 @@ class ChatPage extends Block {
                             }: Record<string, string | number>) => {
         let mes = 'No messages yet';
         if (last_message) {
-            mes = last_message.content.replace(/['"&]/g, '');
+            const forbiddenSymbols:RegExp = /['"&]/g;
+            mes = last_message.content.replace(forbiddenSymbols, '');
         }
         return `
                                     {{{ChatElement title="${title}"

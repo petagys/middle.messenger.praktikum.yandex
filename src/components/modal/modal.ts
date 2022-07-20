@@ -1,16 +1,17 @@
-import { Block } from '../../core';
+import { Block, Store } from '../../core';
 import { searchUser } from '../../services/user';
 import { withStore } from '../../utils';
 import './modal.css';
 
-interface modalProps {
-    close: () => void
+interface ModalProps {
+    close: () => void,
+    store: Store<AppState>
 }
 
 class Modal extends Block {
     static componentName = 'Modal';
 
-    constructor(props: modalProps) {
+    constructor(props: ModalProps) {
         super(props);
         this.setProps({
             close: () => this.props.store.dispatch({ openModal: false }),
@@ -49,7 +50,7 @@ class Modal extends Block {
                                 ${users.map((user:User, i: number) => `
                                 <div class="userBlock">
                                     <span>${user.displayName || `${user.firstName} ${user.secondName}`}</span>
-                                    ${user.id !== id ? `{{{AddUser text="Delete" index=${i}}}}` : ''}
+                                    ${user.id !== id ? `{{{DeleteUser text="Delete" index=${i}}}}` : ''}
                                 </div>
                                 `).join('')}
                             </div>
