@@ -34,7 +34,6 @@ class ChatPage extends Block {
         const {
             user, pageLoading, chats, isLoadingChats,
         } = this.props.store.getState();
-        console.log(1, user);
 
         if (pageLoading) {
             return '{{{PageLoader}}}';
