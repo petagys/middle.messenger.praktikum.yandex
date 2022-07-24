@@ -1,3 +1,5 @@
+import { apiEndpoint } from '../helpers/consts';
+
 const enum Methods {
     GET = 'GET',
     PUT = 'PUT',
@@ -64,7 +66,7 @@ class HTTPTransport {
         return new Promise((resolve, reject) => {
             const xhr:XMLHttpRequest = new XMLHttpRequest();
             xhr.withCredentials = true;
-            xhr.open(method, `${process.env.API_ENDPOINT}/${url}`);
+            xhr.open(method, `${apiEndpoint}/${url}`);
 
             if (headers) {
                 Object.keys(headers).forEach(key => {
