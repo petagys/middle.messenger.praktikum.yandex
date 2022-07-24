@@ -1,16 +1,31 @@
+import { Store } from '../../core';
 import Block from '../../core/Block';
+import { getChatInfo } from '../../services/chats';
+import { withStore } from '../../utils';
 import './chat-element.css';
 
-interface ChatElementProps {
+interface ChatElProps {
+    store: Store<AppState>,
     text: string,
+    id: number,
     title: string,
-    dateText: string,
-    notifications: number,
 }
 
-export class ChatElement extends Block {
-    static get blockName():string {
-        return 'ChatElement';
+class ChatElement extends Block {
+    static componentName = 'ChatElement';
+
+    constructor(props: ChatElProps) {
+        super({
+            ...props,
+            events: {
+                click: () => {
+                    this.props.store.dispatch(getChatInfo, {
+                        id: props.id,
+                        title: props.title,
+                    });
+                },
+            },
+        });
     }
 
     render(): string {
@@ -21,15 +36,17 @@ export class ChatElement extends Block {
                     <div class="chat__name">{{title}}</div>
                     <div class="chat__text ellipsis">
                         <span class="chat__text-inner">
-                            {{text}}
+                            ${this.props.text}
                         </span>
                     </div>
                 </div>
                 <div class="chat__info">
                     <div class="chat__timedate">{{dateText}}</div>
-                    <div class="chat__notification">{{notifications}}</div>
+                    {{#if notifications}}<div class="chat__notification">{{notifications}}</div>{{/if}}
                 </div>
             </div>
         `;
     }
 }
+
+export default withStore(ChatElement);

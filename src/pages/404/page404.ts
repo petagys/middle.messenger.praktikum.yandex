@@ -7,7 +7,7 @@ export class Page404 extends Block {
     render() {
         return `
             <div class="outer">
-                <img src="${err404}" />
+                <img src="${err404}" alt="error404" />
                 <h2>Страница не найдена</h2>
                 <h3>Поворот не туда...</div>
             </div>

@@ -32,3 +32,8 @@
         padding: 12px 0;
     }
 }
+
+.error-block{
+    color: red;
+    margin: 8px 0;
+}

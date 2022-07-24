@@ -17,72 +17,78 @@ function queryStringify(data: Record<string | number, any>): string {
     return result;
 }
 
-interface UpperOptions {
+export interface UpperOptions {
     data?: Record<string | number, any>,
     timeout?: number,
     headers?: Record<string, string>
 }
 
-interface LowerOptions {
-    data?: Record<string | number, unknown> | any,
-    headers?: Record<string, string>,
-    method: Methods
-}
-
 class HTTPTransport {
-    get = (url: string, options: UpperOptions = {}) => {
+    get = (url: string, data: Record<string, unknown> = {}) => {
         let getUrl:string = url;
-        if (options.data) {
-            getUrl += queryStringify(options.data);
+        if (data) {
+            getUrl += queryStringify(data);
         }
-        return this._request(getUrl, { ...options, method: Methods.GET }, options.timeout);
+        return this._request(getUrl, Methods.GET, data);
     };
 
     put = (
         url:string,
-        options: UpperOptions = {},
-    ) => this._request(url, { ...options, method: Methods.PUT }, options.timeout);
+        data: Record<string, unknown> | FormData,
+        options: Record<string, Record<string, string>> = {},
+    ) => this._request(url, Methods.PUT, data, options);
 
     post = (
-        url:string,
-        options: UpperOptions = {},
-    ) => this._request(url, { ...options, method: Methods.POST }, options.timeout);
+        url: string,
+        data: Record<string, unknown> = {},
+    ) => this._request(url, Methods.POST, data);
 
     delete = (
-        url:string,
-        options: UpperOptions = {},
-    ) => this._request(url, { ...options, method: Methods.DELETE }, options.timeout);
+        url: string,
+        data: Record<string, unknown> = {},
+    ) => this._request(url, Methods.DELETE, data);
 
     // PUT, POST, DELETE
 
     // options:
     // headers — obj
     // data — obj
-    protected _request = (url: string, options: LowerOptions, timeout:number = 5000) => {
-        const { data, headers, method } = options;
+    _request = (
+        url: string,
+        method: Methods,
+        data: Record<string, unknown> | FormData,
+        options:Record<string, Record<string, string>> = {},
+        timeout:number = 50000,
+    ) => {
+        const { headers } = options;
         return new Promise((resolve, reject) => {
             const xhr:XMLHttpRequest = new XMLHttpRequest();
-            xhr.open(method, url);
+            xhr.withCredentials = true;
+            xhr.open(method, `${process.env.API_ENDPOINT}/${url}`);
 
             if (headers) {
                 Object.keys(headers).forEach(key => {
                     xhr.setRequestHeader(key, headers[key]);
                 });
             }
+            xhr.setRequestHeader('Content-Type', 'application/json');
 
             xhr.onloadend = function () {
-                resolve(xhr);
+                if (xhr.response === 'OK') {
+                    return resolve(xhr.response);
+                }
+                return resolve(JSON.parse(xhr.response));
             };
             xhr.timeout = timeout;
 
-            xhr.onabort = reject;
-            xhr.onerror = reject;
-            xhr.ontimeout = reject;
+            xhr.onabort = () => reject;
+            xhr.onerror = () => reject;
+            xhr.ontimeout = () => reject;
 
             if (method === Methods.GET || !data) {
                 xhr.send();
             } else {
-                xhr.send(data);
+                xhr.send(JSON.stringify(data));
             }
         });
     };

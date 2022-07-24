@@ -1,0 +1,8 @@
+.del {
+    color: red;
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}

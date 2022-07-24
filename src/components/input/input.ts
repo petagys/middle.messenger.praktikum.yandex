@@ -24,13 +24,11 @@ export class Input extends Block {
         });
     }
 
-    static get blockName():string {
-        return 'Input';
-    }
+    static componentName = 'Input';
 
     render(): string {
         return `
-            <input type="{{type}}" name="{{name}}" />
+            <input type="{{type}}" name="{{name}}" value="{{#if value}}{{value}}{{/if}}" />
         `;
     }
 }

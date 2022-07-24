@@ -36,9 +36,7 @@ export class ProfileElement extends Block {
         });
     }
 
-    static get blockName():string {
-        return 'ProfileElement';
-    }
+    static componentName = 'ProfileElement';
 
     render(): string {
         return `
@@ -48,7 +46,7 @@ export class ProfileElement extends Block {
                </span>
                <div class="errorInputBlock">
                <div class="errorText">{{{Error ref='error'}}}</div>
-                {{{Input type=inputType name=inputName onBlur=onBlur onFocus=onFocus }}}
+                {{{Input type=inputType name=inputName onBlur=onBlur onFocus=onFocus value=value }}}
                </div>
             </div>
         `;
