@@ -1,13 +1,11 @@
 import {
-    registerComponent, Store, Router, renderDOM,
+    registerComponent, Store, Router,
 } from './core';
 import './app.css';
 
 import * as components from './components';
 import { defaultState } from './store';
-import { getScreenComponent } from './utils/screenList';
 import { initApp } from './services/initApp';
-import { DEBUG } from './helpers/consts';
 import {
     ChangePass, Chat, LoginPage, Page404, Page500, Profile, Registration,
 } from './pages';
@@ -28,20 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
     window.router = router;
     window.store = store;
 
-    // store.on('changed', (prevState, nextState) => {
-    //     if (DEBUG) {
-    //         // eslint-disable-next-line no-console
-    //         console.log(
-    //             '%cstore updated',
-    //             'background: #222; color: #bada55',
-    //             nextState,
-    //         );
-    //     }
-    //     if (prevState.screen !== nextState.screen) {
-    //         const Page = getScreenComponent(nextState.screen);
-    //         renderDOM(new Page({}));
-    //     }
-    // });
     /**
    * Инициализируем роутер
    */
