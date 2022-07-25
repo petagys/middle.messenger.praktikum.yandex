@@ -22,7 +22,7 @@ export async function initApp(dispatch: Dispatch<AppState>) {
         dispatch({ user: transformUser(response as UserDTO), pageLoading: false });
 
         if (unAuthLinks.includes(pathname)) {
-            window.router.go('/chats');
+            window.router.go('/chats')
         }
     } catch (err) {
         console.error(err);
