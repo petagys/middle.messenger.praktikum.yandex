@@ -7,7 +7,7 @@ type props = Record<string, any>;
 export default class Router {
     static __instance: Router;
 
-    #routers: Array<Route> = [];
+    routers: Array<Route> = [];
 
     #history: History = window.history;
 
@@ -25,7 +25,7 @@ export default class Router {
     use<P>(pathname: string, block: BlockClass<P>, props: props = {}) {
         const route = new Route(pathname, block, props);
 
-        this.#routers.push(route);
+        this.routers.push(route);
 
         return this;
     }
@@ -66,7 +66,7 @@ export default class Router {
     }
 
     getRoute(pathname: string): Route | undefined {
-        const router = this.#routers.find(route => route.match(pathname));
-        return router || this.#routers.find(route => route.match('*'));
+        const router = this.routers.find(route => route.match(pathname));
+        return router || this.routers.find(route => route.match('*'));
     }
 }
