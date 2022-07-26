@@ -17,7 +17,7 @@ https://cheerful-sawine-0b422c.netlify.app/
 https://my-web-messanger.herokuapp.com/
 
 **Ссылка на ПР:**
-https://github.com/petagys/middle.messenger.praktikum.yandex/pull/3
+https://github.com/petagys/middle.messenger.praktikum.yandex/pull/5
 
 
 ## Сборка и запуск
