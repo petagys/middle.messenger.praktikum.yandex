@@ -31,6 +31,6 @@ describe('Router', () => {
             .use('/pa', Profile)
             .use('/chats', Chats);
 
-        expect(router.routers.length).toEqual(3);
+        expect(router.getRoutes().length).toEqual(3);
     });
 });

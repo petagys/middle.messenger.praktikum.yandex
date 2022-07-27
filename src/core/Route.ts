@@ -48,14 +48,7 @@ export default class Route<P = any> {
     render() {
         const { id } = this.#prefixHandler();
 
-        if (!this.#block) {
-            this.#block = new this.#blockClass({ ...this.#props, idPath: id });
-            renderDOM(this.#block);
-            return;
-        }
-
-        this.#block.setProps({ idPath: id });
+        this.#block = new this.#blockClass({ ...this.#props, idPath: id });
         renderDOM(this.#block);
-        this.#block.show();
     }
 }

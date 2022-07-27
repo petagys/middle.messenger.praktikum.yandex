@@ -30,14 +30,14 @@ document.addEventListener('DOMContentLoaded', () => {
    * Инициализируем роутер
    */
     router
-        .use('/', LoginPage, {})
-        .use('/login', LoginPage, {})
-        .use('/change-pass', ChangePass, {})
-        .use('/pa', Profile, {})
-        .use('/error', Page500, {})
-        .use('/registration', Registration, {})
-        .use('/chats', Chat, {})
-        .use('*', Page404, {})
+        .use('/', LoginPage)
+        .use('/login', LoginPage)
+        .use('/change-pass', ChangePass)
+        .use('/pa', Profile)
+        .use('/error', Page500)
+        .use('/registration', Registration)
+        .use('/chats', Chat)
+        .use('*', Page404)
         .start();
 
     /**
