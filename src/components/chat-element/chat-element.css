@@ -1,11 +1,11 @@
 .chat {
     padding: 12px 8px;
-  border-bottom: 1px solid #eaeaea;
+  border-bottom: 1px solid #EAEAEA;
   display: flex;
   cursor: pointer;
 
   &:hover {
-    background-color: #d9ffea;
+    background-color: #D9FFEA;
   }
 
   &__avatar {
@@ -35,7 +35,7 @@
   &__notification {
     width: 20px;
     height: 20px;
-    background-color: #2fa992;
+    background-color: #2FA992;
     border-radius: 50%;
     font-size: 14px;
     line-height: 12px;

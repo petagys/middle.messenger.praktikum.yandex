@@ -25,6 +25,7 @@ export async function initApp(dispatch: Dispatch<AppState>) {
             window.router.go('/chats');
         }
     } catch (err) {
+        // eslint-disable-next-line no-console
         console.error(err);
     } finally {
         dispatch({ appIsInited: true });

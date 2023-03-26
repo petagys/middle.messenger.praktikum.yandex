@@ -32,7 +32,7 @@ export default class Router {
 
     start() {
         window.onpopstate = ((event) => {
-            this._onRoute(event.currentTarget?.location.pathname);
+            this._onRoute((event.currentTarget as Window).location.pathname);
         });
 
         this._onRoute(window.location.pathname);
@@ -68,5 +68,9 @@ export default class Router {
     getRoute(pathname: string): Route | undefined {
         const router = this.#routers.find(route => route.match(pathname));
         return router || this.#routers.find(route => route.match('*'));
+    }
+
+    getRoutes(): Array<Route> {
+        return this.#routers;
     }
 }

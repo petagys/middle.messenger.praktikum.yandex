@@ -3,6 +3,7 @@
         "color-hex-case": "upper"
     },
     "ignoreFiles": [
-        "build/*"
+        "build/*",
+        "dist/*"
     ]
 }

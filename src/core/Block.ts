@@ -2,8 +2,6 @@ import { nanoid } from 'nanoid';
 import Handlebars from 'handlebars';
 import EventBus from './EventBus';
 
-type Events = Values<typeof Block.EVENTS>;
-
 export interface BlockClass<P> extends Function {
     new(props: P): Block<P>;
     componentName?: string;
@@ -20,13 +18,13 @@ export default class Block<P = any> {
 
     public id = nanoid(6);
 
-    protected _element: Nullable<HTMLElement> = null;
+    protected _element!: HTMLElement;
 
-    protected readonly props: P;
+    readonly props: P;
 
     protected children: { [id: string]: Block } = {};
 
-    eventBus: () => EventBus<Events>;
+    eventBus: () => EventBus;
 
     protected state: any = {};
 
@@ -35,7 +33,7 @@ export default class Block<P = any> {
     public static componentName?: string;
 
     public constructor(props?: P) {
-        const eventBus = new EventBus<Events>();
+        const eventBus = new EventBus();
 
         this.getStateFromProps(props);
 
@@ -64,7 +62,7 @@ export default class Block<P = any> {
         this.eventBus().emit(Block.EVENTS.FLOW_CWU, this.props);
     }
 
-    private _registerEvents(eventBus: EventBus<Events>) {
+    private _registerEvents(eventBus: EventBus) {
         eventBus.on(Block.EVENTS.INIT, this.init.bind(this));
         eventBus.on(Block.EVENTS.FLOW_CDM, this._componentDidMount.bind(this));
         eventBus.on(Block.EVENTS.FLOW_CDU, this._componentDidUpdate.bind(this));
@@ -76,7 +74,7 @@ export default class Block<P = any> {
         this._element = this._createDocumentElement('div');
     }
 
-    protected getStateFromProps(props: any): void {
+    protected getStateFromProps(_props: any): void {
         this.state = {};
     }
 
@@ -91,7 +89,7 @@ export default class Block<P = any> {
         this.componentDidMount(props);
     }
 
-    componentDidMount(props: P) { }
+    componentDidMount(_props: P) { }
 
     private _componentWillUnmount() {
         this.eventBus().destroy();
@@ -108,7 +106,7 @@ export default class Block<P = any> {
         this._render();
     }
 
-    componentDidUpdate(oldProps: P, newProps: P) {
+    componentDidUpdate(_oldProps: P, _newProps: P) {
         return true;
     }
 
